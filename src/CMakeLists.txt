@@ -10,6 +10,8 @@ else()
 	add_executable (PixelEngine "PixelEngine.cpp" "PixelEngine.h")
 endif()
 
+target_link_libraries(PixelEngine glad)
+
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
