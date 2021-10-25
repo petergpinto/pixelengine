@@ -6,4 +6,4 @@ cmake_minimum_required (VERSION 3.8)
 project ("PixelEngine")
 
 # Include sub-projects.
-add_subdirectory ("PixelEngine")
+add_subdirectory ("src")
