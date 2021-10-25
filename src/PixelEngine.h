@@ -7,5 +7,11 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
+namespace PixelEngine {
+
+	int initializeEngine();
+	GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*);
+}
+
 
 // TODO: Reference additional headers your program requires here.

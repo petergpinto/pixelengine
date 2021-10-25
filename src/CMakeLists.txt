@@ -10,6 +10,7 @@ else()
 	add_executable (PixelEngine "main.cpp" "main.h")
 endif()
 
+target_sources(PixelEngine PRIVATE "PixelEngine.cpp")
 target_link_libraries(PixelEngine glad)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
