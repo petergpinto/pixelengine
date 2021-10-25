@@ -4,7 +4,11 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (PixelEngine "PixelEngine.cpp" "PixelEngine.h")
+if(MSVC)
+	add_executable (PixelEngine WIN32 "PixelEngine.cpp" "PixelEngine.h")
+else()
+	add_executable (PixelEngine "PixelEngine.cpp" "PixelEngine.h")
+endif()
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
