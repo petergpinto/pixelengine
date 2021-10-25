@@ -6,3 +6,6 @@ Menu
 	Keycallbacks
 
 Image sprite loading
+
+
+https://learnopengl.com/In-Practice/2D-Game/Setting-up
