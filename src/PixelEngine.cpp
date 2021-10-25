@@ -45,3 +45,7 @@ int main(void)
 	glfwTerminate();
 	return 0;
 }
+
+int WinMain(void) {
+	main();
+}
