@@ -5,13 +5,17 @@ cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
 if(MSVC)
-	add_executable (PixelEngine WIN32 "main.cpp" "main.h")
+	add_executable (PixelEngine WIN32 "main.cpp")
 else()
-	add_executable (PixelEngine "main.cpp" "main.h")
+	add_executable (PixelEngine "main.cpp")
 endif()
 
-target_sources(PixelEngine PRIVATE "PixelEngine.cpp")
 target_link_libraries(PixelEngine glad)
+
+target_sources(PixelEngine PRIVATE "PixelEngine.cpp")
+target_sources(PixelEngine PRIVATE "shader/shader.cpp")
+target_sources(PixelEngine PRIVATE "texture/texture.cpp")
+target_sources(PixelEngine PRIVATE "ResourceManager.cpp")
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
