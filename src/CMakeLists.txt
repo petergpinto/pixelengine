@@ -6,4 +6,16 @@ cmake_minimum_required (VERSION 3.8)
 # Add source to this project's executable.
 add_executable (PixelEngine "PixelEngine.cpp" "PixelEngine.h")
 
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+
+target_link_libraries(PixelEngine glfw)
+
+find_package(OpenGL REQUIRED)
+
+target_link_libraries(PixelEngine OpenGL::GL)
+
+
 # TODO: Add tests and install targets if needed.
