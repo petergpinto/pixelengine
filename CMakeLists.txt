@@ -6,6 +6,7 @@ cmake_minimum_required (VERSION 3.8)
 project ("PixelEngine")
 # Include sub-projects.
 add_subdirectory("glfw-3.3.4")
+add_subdirectory("glad")
 add_subdirectory ("src")
 
 
