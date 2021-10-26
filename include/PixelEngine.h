@@ -8,11 +8,25 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-namespace PixelEngine {
+enum ERROR {
+	NONE = 0,
+	GLFW_INIT = 1,
+	GLFW_WINDOW_CREATE = 2,
+};
 
-	int initializeEngine();
-	GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*);
-}
+class PixelEngine {
+private:
+	GLFWwindow* currentWindow;
+	ERROR error;
 
+public:
+	PixelEngine();
+	ERROR checkError();
+	void terminate();
+	GLFWwindow* getWindow();
+	static int initializeEngine();
+	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*);
+	static int shouldTerminate(GLFWwindow*);
+};
 
 // TODO: Reference additional headers your program requires here.

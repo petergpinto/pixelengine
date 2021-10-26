@@ -2,25 +2,48 @@
 //
 
 #include "PixelEngine.h"
-namespace PixelEngine {
 
-	int initializeEngine() {
-		return glfwInit();
-	}
-
-	GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor* monitor) {
-		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-
-		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-
-		GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "My Title", glfwGetPrimaryMonitor(), NULL);
-		return window;
-	}
-
+PixelEngine::PixelEngine() {
+	error = ERROR::NONE;
+	if (!PixelEngine::initializeEngine())
+		error = ERROR::GLFW_INIT;
+	currentWindow = PixelEngine::createBorderlessFullscreenWindow(glfwGetPrimaryMonitor());
+	if (!currentWindow)
+		error = ERROR::GLFW_WINDOW_CREATE;
 }
+
+ERROR PixelEngine::checkError() {
+	return error;
+}
+
+void PixelEngine::terminate() {
+	glfwTerminate();
+}
+
+GLFWwindow* PixelEngine::getWindow() {
+	return currentWindow;
+}
+
+int PixelEngine::initializeEngine() {
+	return glfwInit();
+}
+
+GLFWwindow* PixelEngine::createBorderlessFullscreenWindow(GLFWmonitor* monitor) {
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "My Title", glfwGetPrimaryMonitor(), NULL);
+	return window;
+}
+
+int PixelEngine::shouldTerminate(GLFWwindow* window) {
+	return glfwWindowShouldClose(window);
+}
+
 /*
 int main(void)
 {
