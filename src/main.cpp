@@ -7,18 +7,15 @@
 int main(void)
 {
 	/* Initialize the library */
-	if (!PixelEngine::initializeEngine())
-		return -1;
-	GLFWwindow* window = PixelEngine::createBorderlessFullscreenWindow(glfwGetPrimaryMonitor());
-
-	if (!window)
-	{
-		glfwTerminate();
-		return -1;
+	PixelEngine* engine = new PixelEngine();
+	
+	if (engine->checkError() != ERROR::NONE) {
+		engine->terminate();
+		return engine->checkError();
 	}
 
 	/* Make the window's context current */
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(engine->getWindow());
 	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
 
 
@@ -62,14 +59,14 @@ int main(void)
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(window))
+	while (!PixelEngine::shouldTerminate(engine->getWindow()))
 	{
 		/* Render here */
 		glClearColor(1.0, 1.0, 1.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(engine->getWindow());
 
 		/* Poll for and process events */
 		glfwPollEvents();
