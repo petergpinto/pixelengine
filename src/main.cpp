@@ -19,22 +19,21 @@ int main(void)
 	glfwMakeContextCurrent(engine->getWindow());
 	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
 
-	glViewport(0,0,engine->getHeight(), engine->getWidth());
-	glEnable(GL_BLEND);
+	glViewport(0,0,engine->getWidth(), engine->getHeight());
+	//glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	SpriteRenderer  *Renderer;
 	ResourceManager::LoadShader("../resources/shaders/sprite.vs", "../resources/shaders/sprite.frag", nullptr, "sprite");
 
-	glm::mat4 projection = glm::ortho<float>(0.0f, static_cast<float>(engine->getWidth()),
-		static_cast<float>(engine->getHeight()), 0.0f, -1.0f, 1.0f);
+	glm::mat4 projection = glm::ortho<float>(0.0f, static_cast<float>(engine->getWidth()), static_cast<float>(engine->getHeight()), 0.0f, -1.0f, 1.0f);
 	ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
 
 	Shader sprite = ResourceManager::GetShader("sprite");
 	Renderer = new SpriteRenderer(sprite);
 
-	ResourceManager::LoadTexture("../resources/textures/awesomeface.png", true, "face");
+	ResourceManager::LoadTexture("../resources/textures/awesomeface2.png", true, "face");
 
 	/* Loop until the user closes the window */
 	while (!PixelEngine::shouldTerminate(engine->getWindow()))
@@ -45,8 +44,8 @@ int main(void)
 
 		Texture2D face = ResourceManager::GetTexture("face");
 		Renderer->DrawSprite(face,
-			glm::vec2(static_cast<float>(engine->getWidth()-300), static_cast<float>(engine->getHeight()-400)), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-
+			glm::vec2(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), glm::vec2(500.0f, 500.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+			//static_cast<float>(engine->getWidth() /2), static_cast<float>(engine->getHeight() / 2)
 		/* Swap front and back buffers */
 		glfwSwapBuffers(engine->getWindow());
 
