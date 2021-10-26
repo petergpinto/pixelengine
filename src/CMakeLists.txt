@@ -16,6 +16,7 @@ target_sources(PixelEngine PRIVATE "PixelEngine.cpp")
 target_sources(PixelEngine PRIVATE "shader/shader.cpp")
 target_sources(PixelEngine PRIVATE "texture/texture.cpp")
 target_sources(PixelEngine PRIVATE "ResourceManager.cpp")
+target_sources(PixelEngine PRIVATE "texture/SpriteRenderer.cpp")
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
