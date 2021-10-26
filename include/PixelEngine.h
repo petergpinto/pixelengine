@@ -24,16 +24,24 @@ private:
 	ERROR error;
 	float currentWindowHeight;
 	float currentWindowWidth;
+	bool vsyncEnabled;
+	
+	//FPS counter vars
+	double fps, fpsTotalTime = 0.0f;
+	int fpsFrameCount = 0;
+
 
 public:
-	PixelEngine();
+	PixelEngine(bool vsync = true);
 	ERROR checkError();
 	void terminate();
 	GLFWwindow* getWindow();
 	float getWidth();
 	float getHeight();
+	void fpsCounter(double, int, bool debugPrint = false);
+	void swapBufferOrFlush();
 	static int initializeEngine();
-	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*);
+	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);
 	static int shouldTerminate(GLFWwindow*);
 };
 
