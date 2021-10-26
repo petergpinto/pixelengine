@@ -31,7 +31,8 @@ int main(void)
 	ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
 
-	Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
+	Shader sprite = ResourceManager::GetShader("sprite");
+	Renderer = new SpriteRenderer(sprite);
 
 	ResourceManager::LoadTexture("../resources/textures/awesomeface.png", true, "face");
 
