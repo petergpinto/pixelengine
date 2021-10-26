@@ -11,7 +11,7 @@ int keyPressed = 0;
 int main(void)
 {
 	/* Initialize the library */
-	PixelEngine* engine = new PixelEngine();
+	PixelEngine* engine = new PixelEngine(false);
 	
 	if (engine->checkError() != ERROR::NONE) {
 		engine->terminate();
@@ -55,6 +55,8 @@ int main(void)
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+		//std::cout << deltaTime << std::endl;
+		engine->fpsCounter(deltaTime, 100, true);
 
 		/* Render here */
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -72,7 +74,7 @@ int main(void)
 
 			//static_cast<float>(engine->getWidth() /2), static_cast<float>(engine->getHeight() / 2)
 		/* Swap front and back buffers */
-		glfwSwapBuffers(engine->getWindow());
+		engine->swapBufferOrFlush();
 
 		/* Poll for and process events */
 		glfwPollEvents();
