@@ -12,18 +12,39 @@ SpriteRenderer::~SpriteRenderer()
 	glDeleteVertexArrays(1, &this->quadVAO);
 }
 
-void SpriteRenderer::DrawSprite(Texture2D &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color)
+void SpriteRenderer::DrawSprite(Texture2D &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color, float aspectRatio)
 {
+	float xScaleImg = 1.0f;
+	float yScaleImg = xScaleImg * (size.x / size.y);
+	float xScaleView = 1.0f;
+	float yScaleView = aspectRatio;
+
 	// prepare transformations
 	this->shader.Use();
 	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::scale(model, glm::vec3(xScaleView, yScaleView, 1.0f));
 	model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
 	model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
 	model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
-	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
+	model = glm::scale(model, glm::vec3(xScaleImg, yScaleImg, 1.0f));
+	model = glm::translate(model, glm::vec3(-1.0f * size.x, -1.0f * size.y, 0.0f)); // move origin back
 
-	model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
+	/*
+	float xScaleImg = 1.0f;
+    float yScaleImg = xScaleImg / imgAspectRatio;
+
+    float xScaleView = 1.0f;
+    float yScaleView = viewAspectRatio;
+
+    glm::mat4 model(1.0f);
+    model = glm::scale(model, glm::vec3(xScaleView, yScaleView, 1.0f));
+    model = glm::translate(model, glm::vec3(0, 0, 0));
+    model = glm::rotate(model, glm::radians(angle), glm::vec3(0, 0, 1));
+    model = glm::scale(model, glm::vec3(xScaleImg, yScaleImg, 1.0f));
+	*/
+
+
+	model = glm::scale(model, glm::vec3(size.x, size.y, 1.0f)); // last scale
 
 	this->shader.SetMatrix4("model", model);
 
@@ -31,6 +52,7 @@ void SpriteRenderer::DrawSprite(Texture2D &texture, glm::vec2 position, glm::vec
 	this->shader.SetVector3f("spriteColor", color);
 
 	glActiveTexture(GL_TEXTURE0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	texture.Bind();
 
 	glBindVertexArray(this->quadVAO);
