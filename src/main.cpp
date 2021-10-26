@@ -5,6 +5,9 @@
 #include "PixelEngine.h"
 #include <fstream>
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+int keyPressed = 0;
+
 int main(void)
 {
 	/* Initialize the library */
@@ -18,6 +21,8 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(engine->getWindow());
 	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
+
+	glfwSetKeyCallback(engine->getWindow(), key_callback);
 
 	glViewport(0,0,engine->getWidth(), engine->getHeight());
 	//glEnable(GL_BLEND);
@@ -35,22 +40,52 @@ int main(void)
 
 	ResourceManager::LoadTexture("../resources/textures/awesomeface2.png", true, "face");
 
+	float deltaTime = 0.0f;
+	float lastFrame = 0.0f;
+	float xPos = static_cast<float>(engine->getWidth() / 2);
+	float yPos = static_cast<float>(engine->getHeight() / 2);
+	float rotation = 0.0f;
+
 	/* Loop until the user closes the window */
 	while (!PixelEngine::shouldTerminate(engine->getWindow()))
 	{
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		/* Render here */
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		Texture2D face = ResourceManager::GetTexture("face");
 		Renderer->DrawSprite(face,
-			glm::vec2(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), glm::vec2(500.0f, 500.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+			glm::vec2(xPos, yPos), glm::vec2(500.0f, 500.0f), rotation, glm::vec3(1.0f, 1.0f, 1.0f));
 			//static_cast<float>(engine->getWidth() /2), static_cast<float>(engine->getHeight() / 2)
 		/* Swap front and back buffers */
 		glfwSwapBuffers(engine->getWindow());
 
 		/* Poll for and process events */
 		glfwPollEvents();
+		switch(keyPressed) {
+		case GLFW_KEY_D:
+			xPos += 100 * deltaTime;
+			break;
+		case GLFW_KEY_A:
+			xPos -= 100 * deltaTime;
+			break;
+		case GLFW_KEY_S:
+			yPos += 100 * deltaTime;
+			break;
+		case GLFW_KEY_W:
+			yPos -= 100 * deltaTime;
+			break;
+		case GLFW_KEY_Q:
+			rotation += 10 * deltaTime;
+			break;
+		case GLFW_KEY_E:
+			rotation -= 10 * deltaTime;
+			break;
+		}
 	}
 
 	glfwTerminate();
@@ -59,4 +94,18 @@ int main(void)
 
 int WinMain(void) {
 	main();
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+	// when a user presses the escape key, we set the WindowShouldClose property to true, closing the application
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+	if (key >= 0 && key < 1024)
+	{
+		if (action == GLFW_PRESS)
+			keyPressed = key; // Breakout.Keys[key] = true;
+		else if (action == GLFW_RELEASE)
+			keyPressed = 0; // Breakout.Keys[key] = false;
+	}
 }
