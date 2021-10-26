@@ -42,7 +42,8 @@ int main(void)
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		Renderer->DrawSprite(ResourceManager::GetTexture("face"),
+		Texture2D face = ResourceManager::GetTexture("face");
+		Renderer->DrawSprite(face,
 			glm::vec2(static_cast<float>(engine->getWidth()-300), static_cast<float>(engine->getHeight()-400)), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 		/* Swap front and back buffers */
