@@ -22,12 +22,16 @@ class PixelEngine {
 private:
 	GLFWwindow* currentWindow;
 	ERROR error;
+	float currentWindowHeight;
+	float currentWindowWidth;
 
 public:
 	PixelEngine();
 	ERROR checkError();
 	void terminate();
 	GLFWwindow* getWindow();
+	float getWidth();
+	float getHeight();
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*);
 	static int shouldTerminate(GLFWwindow*);

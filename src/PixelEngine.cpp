@@ -8,6 +8,9 @@ PixelEngine::PixelEngine() {
 	if (!PixelEngine::initializeEngine())
 		error = ERROR::GLFW_INIT;
 	currentWindow = PixelEngine::createBorderlessFullscreenWindow(glfwGetPrimaryMonitor());
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	currentWindowHeight = mode->height;
+	currentWindowWidth = mode->width;
 	if (!currentWindow)
 		error = ERROR::GLFW_WINDOW_CREATE;
 }
@@ -42,6 +45,14 @@ GLFWwindow* PixelEngine::createBorderlessFullscreenWindow(GLFWmonitor* monitor) 
 
 int PixelEngine::shouldTerminate(GLFWwindow* window) {
 	return glfwWindowShouldClose(window);
+}
+
+float PixelEngine::getHeight() {
+	return currentWindowHeight;
+}
+
+float PixelEngine::getWidth() {
+	return currentWindowWidth;
 }
 
 /*
