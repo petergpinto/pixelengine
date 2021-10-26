@@ -6,6 +6,8 @@ Menu
 	Keycallbacks
 
 Image sprite loading
-
+	performance testing 
+		with large sprites
+		with many sprites
 
 https://learnopengl.com/In-Practice/2D-Game/Setting-up
