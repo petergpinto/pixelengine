@@ -5,7 +5,7 @@ cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
 if(MSVC)
-	add_executable (PixelEngine WIN32 "main.cpp")
+	add_executable (PixelEngine "main.cpp") # Add WIN32 for release
 else()
 	add_executable (PixelEngine "main.cpp")
 endif()
