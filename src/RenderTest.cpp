@@ -2,8 +2,17 @@
 //Should be excluded from final builds
 
 #include "RenderTest.h"
+#include "KeyboardHandler.h"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+float xPos, yPos, deltaTime, rotation;
+void runW();
+void runA();
+void runS();
+void runD();
+void runQ();
+void runE();
+
 int keyPressed = 0;
 
 int RenderTest() {
@@ -19,7 +28,16 @@ int RenderTest() {
 	glfwMakeContextCurrent(engine->getWindow());
 	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
 
-	glfwSetKeyCallback(engine->getWindow(), key_callback);
+	KeyboardHandler* keyboardHandler = new KeyboardHandler();
+	keyboardHandler->setCallback(engine->getWindow());
+	keyboardHandler->registerAction(GLFW_KEY_W, runW);
+	keyboardHandler->registerAction(GLFW_KEY_A, runA);
+	keyboardHandler->registerAction(GLFW_KEY_S, runS);
+	keyboardHandler->registerAction(GLFW_KEY_D, runD);
+	keyboardHandler->registerAction(GLFW_KEY_Q, runQ);
+	keyboardHandler->registerAction(GLFW_KEY_E, runE);
+
+	//glfwSetKeyCallback(engine->getWindow(), key_callback);
 
 	glViewport(0, 0, engine->getWidth(), engine->getHeight());
 	glEnable(GL_BLEND);
@@ -40,11 +58,11 @@ int RenderTest() {
 	ResourceManager::LoadTexture("../resources/textures/test.png", true, "test");
 
 
-	float deltaTime = 0.0f;
+	deltaTime = 0.0f;
 	float lastFrame = 0.0f;
-	float xPos = static_cast<float>(engine->getWidth() / 2);
-	float yPos = static_cast<float>(engine->getHeight() / 2);
-	float rotation = 0.0f;
+	xPos = static_cast<float>(engine->getWidth() / 2);
+	yPos = static_cast<float>(engine->getHeight() / 2);
+	rotation = 0.0f;
 
 	/* Loop until the user closes the window */
 	while (!PixelEngine::shouldTerminate(engine->getWindow()))
@@ -53,7 +71,8 @@ int RenderTest() {
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		//std::cout << deltaTime << std::endl;
-		engine->fpsCounter(deltaTime, 100, true);
+		engine->fpsCounter(deltaTime, 100);
+		keyboardHandler->handleInput();
 
 		/* Render here */
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -99,6 +118,25 @@ int RenderTest() {
 
 	glfwTerminate();
 	return 0;
+}
+
+void runW() {
+	yPos -= 100 * deltaTime;
+}
+void runA() {
+	xPos -= 100 * deltaTime;
+}
+void runS() {
+	yPos += 100 * deltaTime;
+}
+void runD() {
+	xPos += 100 * deltaTime;
+}
+void runQ() {
+	rotation -= 10 * deltaTime;
+}
+void runE() {
+	rotation += 10 * deltaTime;
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
