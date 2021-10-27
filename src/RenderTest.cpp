@@ -6,18 +6,20 @@
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
+PixelEngine* engine;
 void runW();
 void runA();
 void runS();
 void runD();
 void runQ();
 void runE();
+void shutdown();
 
 int keyPressed = 0;
 
 int RenderTest() {
 	/* Initialize the library */
-	PixelEngine* engine = new PixelEngine(false);
+	engine = new PixelEngine(false);
 
 	if (engine->checkError() != ERROR::NONE) {
 		engine->terminate();
@@ -36,6 +38,7 @@ int RenderTest() {
 	keyboardHandler->registerAction(GLFW_KEY_D, runD);
 	keyboardHandler->registerAction(GLFW_KEY_Q, runQ);
 	keyboardHandler->registerAction(GLFW_KEY_E, runE);
+	keyboardHandler->registerAction(GLFW_KEY_ESCAPE, shutdown);
 
 	glViewport(0, 0, engine->getWidth(), engine->getHeight());
 	glEnable(GL_BLEND);
@@ -115,6 +118,10 @@ void runQ() {
 }
 void runE() {
 	rotation += 10 * deltaTime;
+}
+
+void shutdown() {
+	delete engine;
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)

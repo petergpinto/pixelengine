@@ -16,6 +16,11 @@ PixelEngine::PixelEngine(bool vsync) {
 		error = ERROR::GLFW_WINDOW_CREATE;
 }
 
+PixelEngine::~PixelEngine() {
+	this->shouldTerminate(currentWindow);
+}
+
+
 ERROR PixelEngine::checkError() {
 	return error;
 }

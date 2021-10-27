@@ -33,6 +33,7 @@ private:
 
 public:
 	PixelEngine(bool vsync = true);
+	~PixelEngine();
 	ERROR checkError();
 	void terminate();
 	GLFWwindow* getWindow();
