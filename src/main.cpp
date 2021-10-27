@@ -25,7 +25,7 @@ int main(void)
 	glfwSetKeyCallback(engine->getWindow(), key_callback);
 
 	glViewport(0,0,engine->getWidth(), engine->getHeight());
-	//glEnable(GL_BLEND);
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	SpriteRenderer  *Renderer;
@@ -62,15 +62,15 @@ int main(void)
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		Texture2D faceHighRes = ResourceManager::GetTexture("faceHighRes");
+		Renderer->DrawSprite(faceHighRes,
+			glm::vec2(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), glm::vec2(500.0f, 500.0f), -15.0f, glm::vec3(0.0f, 1.0f, 1.0f));
+		Texture2D test = ResourceManager::GetTexture("test");
+		Renderer->DrawSprite(test,
+			glm::vec2(0.0f, 0.0f), glm::vec2(500.0f, 500.0f), 45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		Texture2D face = ResourceManager::GetTexture("face");
 		Renderer->DrawSprite(face,
 			glm::vec2(xPos, yPos), glm::vec2(500.0f, 500.0f), rotation, glm::vec3(1.0f, 1.0f, 1.0f));
-		Texture2D faceHighRes = ResourceManager::GetTexture("faceHighRes");
-		Renderer->DrawSprite(faceHighRes,
-			glm::vec2(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), glm::vec2(500.0f, 500.0f), 0.0f, glm::vec3(0.0f, 1.0f, 1.0f));
-		Texture2D test = ResourceManager::GetTexture("test");
-		Renderer->DrawSprite(test,
-			glm::vec2(0.0f, 0.0f), glm::vec2(500.0f, 500.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 			//static_cast<float>(engine->getWidth() /2), static_cast<float>(engine->getHeight() / 2)
 		/* Swap front and back buffers */
