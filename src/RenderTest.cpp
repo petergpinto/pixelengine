@@ -37,8 +37,6 @@ int RenderTest() {
 	keyboardHandler->registerAction(GLFW_KEY_Q, runQ);
 	keyboardHandler->registerAction(GLFW_KEY_E, runE);
 
-	//glfwSetKeyCallback(engine->getWindow(), key_callback);
-
 	glViewport(0, 0, engine->getWidth(), engine->getHeight());
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -94,26 +92,6 @@ int RenderTest() {
 
 		/* Poll for and process events */
 		glfwPollEvents();
-		switch (keyPressed) {
-		case GLFW_KEY_D:
-			xPos += 100 * deltaTime;
-			break;
-		case GLFW_KEY_A:
-			xPos -= 100 * deltaTime;
-			break;
-		case GLFW_KEY_S:
-			yPos += 100 * deltaTime;
-			break;
-		case GLFW_KEY_W:
-			yPos -= 100 * deltaTime;
-			break;
-		case GLFW_KEY_Q:
-			rotation += 10 * deltaTime;
-			break;
-		case GLFW_KEY_E:
-			rotation -= 10 * deltaTime;
-			break;
-		}
 	}
 
 	glfwTerminate();
