@@ -7,13 +7,13 @@
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
 PixelEngine* engine;
-void runW();
-void runA();
-void runS();
-void runD();
-void runQ();
-void runE();
-void shutdown();
+void runW(double);
+void runA(double);
+void runS(double);
+void runD(double);
+void runQ(double);
+void runE(double);
+void shutdown(double);
 
 int keyPressed = 0;
 
@@ -73,7 +73,7 @@ int RenderTest() {
 		lastFrame = currentFrame;
 		//std::cout << deltaTime << std::endl;
 		engine->fpsCounter(deltaTime, 100);
-		keyboardHandler->handleInput();
+		keyboardHandler->handleInput(deltaTime);
 
 		/* Render here */
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -101,26 +101,26 @@ int RenderTest() {
 	return 0;
 }
 
-void runW() {
+void runW(double deltaTime) {
 	yPos -= 100 * deltaTime;
 }
-void runA() {
+void runA(double deltaTime) {
 	xPos -= 100 * deltaTime;
 }
-void runS() {
+void runS(double deltaTime) {
 	yPos += 100 * deltaTime;
 }
-void runD() {
+void runD(double deltaTime) {
 	xPos += 100 * deltaTime;
 }
-void runQ() {
+void runQ(double deltaTime) {
 	rotation -= 10 * deltaTime;
 }
-void runE() {
+void runE(double deltaTime) {
 	rotation += 10 * deltaTime;
 }
 
-void shutdown() {
+void shutdown(double deltaTime) {
 	delete engine;
 }
 

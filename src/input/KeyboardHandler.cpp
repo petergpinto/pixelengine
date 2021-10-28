@@ -12,18 +12,18 @@ void KeyboardHandler::setCallback(GLFWwindow* window) {
 	glfwSetKeyCallback(window, key_callback);
 }
 
-void KeyboardHandler::handleInput() {
+void KeyboardHandler::handleInput(double deltaTime) {
 	for (int i = 0; i < KeyboardHandler::numKeys; i++) {
 		if (KeyboardHandler::keysPressed[i]) {
 			//run key actions
-			for (std::function<void(void)> f : keyActions[i]) {
-				f();
+			for (std::function<void(double)> f : keyActions[i]) {
+				f(deltaTime);
 			}
 		}
 	}
 }
 
-void KeyboardHandler::registerAction(int key, std::function<void(void)> func) {
+void KeyboardHandler::registerAction(int key, std::function<void(double)> func) {
 	keyActions[key].push_back(func);  //std::vector<std::function<void(void)>>
 }
 
