@@ -18,6 +18,7 @@ target_sources(PixelEngine PRIVATE "texture/texture.cpp")
 target_sources(PixelEngine PRIVATE "ResourceManager.cpp")
 target_sources(PixelEngine PRIVATE "texture/SpriteRenderer.cpp")
 target_sources(PixelEngine PRIVATE "input/KeyboardHandler.cpp")
+target_sources(PixelEngine PRIVATE "input/MouseHandler.cpp")
 
 #Debug
 target_sources(PixelEngine PRIVATE "RenderTest.cpp")

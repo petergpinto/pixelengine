@@ -3,10 +3,12 @@
 
 #include "RenderTest.h"
 #include "KeyboardHandler.h"
+#include "MouseHandler.h"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
 PixelEngine* engine;
+SpriteRenderer  *Renderer;
 void runW(double);
 void runA(double);
 void runS(double);
@@ -14,6 +16,7 @@ void runD(double);
 void runQ(double);
 void runE(double);
 void shutdown(double);
+void createSpriteOnCursor(double);
 
 int keyPressed = 0;
 
@@ -40,11 +43,16 @@ int RenderTest() {
 	keyboardHandler->registerAction(GLFW_KEY_E, runE);
 	keyboardHandler->registerAction(GLFW_KEY_ESCAPE, shutdown);
 
+	MouseHandler* mouseHandler = new MouseHandler();
+	mouseHandler->setMouseButtonCallback(engine->getWindow());
+	mouseHandler->setPositionCallback(engine->getWindow());
+	mouseHandler->registerAction(GLFW_MOUSE_BUTTON_LEFT, createSpriteOnCursor);
+
 	glViewport(0, 0, engine->getWidth(), engine->getHeight());
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	SpriteRenderer  *Renderer;
+
 	ResourceManager::LoadShader("../resources/shaders/sprite.vs", "../resources/shaders/sprite.frag", nullptr, "sprite");
 
 	glm::mat4 projection = glm::ortho<float>(0.0f, static_cast<float>(engine->getWidth()), static_cast<float>(engine->getHeight()), 0.0f, -1.0f, 1.0f);
@@ -71,13 +79,16 @@ int RenderTest() {
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		//std::cout << deltaTime << std::endl;
-		engine->fpsCounter(deltaTime, 100);
-		keyboardHandler->handleInput(deltaTime);
-
 		/* Render here */
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		//std::cout << deltaTime << std::endl;
+		engine->fpsCounter(deltaTime, 100);
+		keyboardHandler->handleInput(deltaTime);
+		mouseHandler->handleInput(deltaTime);
+
+
 
 		Texture2D faceHighRes = ResourceManager::GetTexture("faceHighRes");
 		Renderer->DrawSprite(faceHighRes,
@@ -99,6 +110,13 @@ int RenderTest() {
 
 	glfwTerminate();
 	return 0;
+}
+
+void createSpriteOnCursor(double deltaTime) {
+	Texture2D face = ResourceManager::GetTexture("face");
+	Renderer->DrawSprite(face,
+		glm::vec2(MouseHandler::xpos, MouseHandler::ypos), glm::vec2(100.0f, 100.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	std::cout << MouseHandler::xpos << " " << MouseHandler::ypos << std::endl;
 }
 
 void runW(double deltaTime) {

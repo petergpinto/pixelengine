@@ -3,7 +3,7 @@
 bool KeyboardHandler::keysPressed[] = { 0 };
 
 KeyboardHandler::KeyboardHandler() {
-	for (int i = 0; i < 1024; i++) {
+	for (int i = 0; i < KeyboardHandler::numKeys; i++) {
 		keyActions[i] = {};
 	}
 }
