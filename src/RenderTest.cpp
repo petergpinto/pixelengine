@@ -10,7 +10,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 float xPos, yPos, deltaTime, rotation;
 PixelEngine* engine;
 SpriteRenderer  *Renderer;
-std::vector<GameObject> gameObjects = {};
+std::vector<GameObject*> gameObjects = {};
+GameObject* Player;
 void runW(double);
 void runA(double);
 void runS(double);
@@ -75,11 +76,12 @@ int RenderTest() {
 	yPos = static_cast<float>(engine->getHeight() / 2);
 	rotation = 0.0f;
 
-	gameObjects.push_back(GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer));
-	gameObjects.push_back(GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer,
+	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer));
+	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer,
 		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2))));
-	gameObjects.push_back(GameObject(ResourceManager::GetTexture("test"), Renderer, Position(), Position(), Size(500.0f,500.0f)));
-	gameObjects.push_back(GameObject(ResourceManager::GetTexture("face"), Renderer, Position(), Position(xPos, yPos)));
+	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("test"), Renderer, Position(), Position(), Size(500.0f,500.0f)));
+	Player = new GameObject(ResourceManager::GetTexture("face"), Renderer, Position(), Position(xPos, yPos));
+	gameObjects.push_back(Player);
 
 	/* Loop until the user closes the window */
 	while (!PixelEngine::shouldTerminate(engine->getWindow()))
@@ -96,8 +98,8 @@ int RenderTest() {
 		keyboardHandler->handleInput(deltaTime);
 		mouseHandler->handleInput(deltaTime);
 
-		for (GameObject g : gameObjects) {
-			g.Render();
+		for (GameObject* g : gameObjects) {
+			g->Render();
 		}
 
 		//Texture2D faceHighRes = ResourceManager::GetTexture("faceHighRes");
@@ -130,16 +132,17 @@ void createSpriteOnCursor(double deltaTime) {
 }
 
 void runW(double deltaTime) {
-	yPos -= 100 * deltaTime;
-}
-void runA(double deltaTime) {
-	xPos -= 100 * deltaTime;
+	Player->addLocalPositionOffset(Position(0.0f, -100 * deltaTime));
 }
 void runS(double deltaTime) {
-	yPos += 100 * deltaTime;
+	Player->addLocalPositionOffset(Position(0.0f, 100 * deltaTime));
+}
+void runA(double deltaTime) {
+	Player->addLocalPositionOffset(Position(-100 * deltaTime, 0.0f));
 }
 void runD(double deltaTime) {
-	xPos += 100 * deltaTime;
+	Player->addLocalPositionOffset(Position(100 * deltaTime, 0.0f));
+
 }
 void runQ(double deltaTime) {
 	rotation -= 10 * deltaTime;

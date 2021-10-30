@@ -20,7 +20,7 @@ struct Position {
 		return *this;
 	}
 
-	Position& operator+(const Position& a) const {
+	Position operator+(const Position& a) const {
 		return Position(a.x + x, a.y + y);
 	}
 
@@ -44,7 +44,7 @@ struct Size {
 		return *this;
 	}
 
-	Size& operator+(const Position& a) const {
+	Size operator+(const Position& a) const {
 		return Size(a.x + x, a.y + y);
 	}
 
