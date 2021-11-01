@@ -17,6 +17,8 @@ PixelEngine::PixelEngine(bool vsync, int monitor) {
 	currentWindowWidth = mode->width;
 	if (!currentWindow)
 		error = ERROR::GLFW_WINDOW_CREATE;
+	mouseHandler = new MouseHandler();
+	keyboardHandler = new KeyboardHandler();
 }
 
 PixelEngine::~PixelEngine() {

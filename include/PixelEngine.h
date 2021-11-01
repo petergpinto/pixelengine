@@ -15,6 +15,8 @@
 #include "ResourceManager.h"
 #include "transform.h"
 #include "GameObject.h"
+#include "MouseHandler.h"
+#include "KeyboardHandler.h"
 
 
 enum ERROR {
@@ -31,6 +33,8 @@ private:
 	float currentWindowWidth;
 	bool vsyncEnabled;
 	Transform worldOrigin;
+	KeyboardHandler* keyboardHandler;
+	MouseHandler* mouseHandler;
 
 	//FPS counter vars
 	double fps, fpsTotalTime = 0.0f;
