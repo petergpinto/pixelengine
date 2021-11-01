@@ -111,3 +111,15 @@ void PixelEngine::setGLFWContext() {
 	glfwMakeContextCurrent(currentWindow);
 	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
 }
+
+void PixelEngine::setKeyboardAndMouseCallbacks() {
+	keyboardHandler->setCallback(currentWindow);
+	mouseHandler->setMouseButtonCallback(currentWindow);
+	mouseHandler->setPositionCallback(currentWindow);
+}
+
+void PixelEngine::initializeOpenGLViewport() {
+	glViewport(0, 0, this->getWidth(), this->getHeight());
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}

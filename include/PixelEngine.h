@@ -56,6 +56,8 @@ public:
 	void renderObjects(SpriteRenderer*);
 	void deleteMarkedObjects();
 	void setGLFWContext();
+	void setKeyboardAndMouseCallbacks();
+	void initializeOpenGLViewport();
 
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);

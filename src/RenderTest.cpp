@@ -29,19 +29,18 @@ int RenderTest() {
 	/* Make the window's context current */
 	engine->setGLFWContext();
 
+	//engine->setKeyboardAndMouseCallbacks();
+
 	KeyboardHandler* keyboardHandler = new KeyboardHandler();
 	keyboardHandler->setCallback(engine->getWindow());
-	keyboardHandler->registerAction(GLFW_KEY_ESCAPE, shutdown);
+	keyboardHandler->registerAction(GLFW_KEY_ESCAPE, std::bind(&shutdown, std::placeholders::_1));
 
 	MouseHandler* mouseHandler = new MouseHandler();
 	mouseHandler->setMouseButtonCallback(engine->getWindow());
 	mouseHandler->setPositionCallback(engine->getWindow());
-	mouseHandler->registerAction(GLFW_MOUSE_BUTTON_LEFT, createSpriteOnCursor);
+	mouseHandler->registerAction(GLFW_MOUSE_BUTTON_LEFT, std::bind(&createSpriteOnCursor, std::placeholders::_1));
 
-	glViewport(0, 0, engine->getWidth(), engine->getHeight());
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	engine->initializeOpenGLViewport();
 
 	ResourceManager::LoadShader("../resources/shaders/sprite.vs", "../resources/shaders/sprite.frag", nullptr, "sprite");
 
