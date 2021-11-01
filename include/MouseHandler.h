@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <functional>
 #include <vector>
+#include "GameObject.h"
 
 #define NUM_MOUSE_BUTTONS 8 
 

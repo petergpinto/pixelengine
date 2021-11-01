@@ -20,6 +20,7 @@ target_sources(PixelEngine PRIVATE "texture/SpriteRenderer.cpp")
 target_sources(PixelEngine PRIVATE "input/KeyboardHandler.cpp")
 target_sources(PixelEngine PRIVATE "input/MouseHandler.cpp")
 target_sources(PixelEngine PRIVATE "GameObject.cpp")
+target_sources(PixelEngine PRIVATE "Player.cpp")
 
 #Debug
 target_sources(PixelEngine PRIVATE "RenderTest.cpp")

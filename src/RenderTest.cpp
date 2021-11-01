@@ -5,19 +5,14 @@
 #include "KeyboardHandler.h"
 #include "MouseHandler.h"
 #include "GameObject.h"
+#include "Player.h"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
 PixelEngine* engine;
 SpriteRenderer  *Renderer;
 std::vector<GameObject*> gameObjects = {};
-GameObject* Player;
-void runW(double);
-void runA(double);
-void runS(double);
-void runD(double);
-void runQ(double);
-void runE(double);
+Player* player;
 void shutdown(double);
 void createSpriteOnCursor(double);
 
@@ -38,12 +33,6 @@ int RenderTest() {
 
 	KeyboardHandler* keyboardHandler = new KeyboardHandler();
 	keyboardHandler->setCallback(engine->getWindow());
-	keyboardHandler->registerAction(GLFW_KEY_W, runW);
-	keyboardHandler->registerAction(GLFW_KEY_A, runA);
-	keyboardHandler->registerAction(GLFW_KEY_S, runS);
-	keyboardHandler->registerAction(GLFW_KEY_D, runD);
-	keyboardHandler->registerAction(GLFW_KEY_Q, runQ);
-	keyboardHandler->registerAction(GLFW_KEY_E, runE);
 	keyboardHandler->registerAction(GLFW_KEY_ESCAPE, shutdown);
 
 	MouseHandler* mouseHandler = new MouseHandler();
@@ -78,10 +67,18 @@ int RenderTest() {
 
 	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer));
 	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer,
-		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2))));
+		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), 
+		Position(), 
+		Size(100.0f, 100.0f)));
 	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("test"), Renderer, Position(), Position(), Size(500.0f,500.0f)));
-	Player = new GameObject(ResourceManager::GetTexture("face"), Renderer, Position(), Position(xPos, yPos));
-	gameObjects.push_back(Player);
+	player = new Player(ResourceManager::GetTexture("face"), Renderer);
+	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
+	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, player, std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, player, std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, player, std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, player, std::placeholders::_1));
+
+	gameObjects.push_back(player);
 
 	/* Loop until the user closes the window */
 	while (!PixelEngine::shouldTerminate(engine->getWindow()))
@@ -102,17 +99,6 @@ int RenderTest() {
 			g->Render();
 		}
 
-		//Texture2D faceHighRes = ResourceManager::GetTexture("faceHighRes");
-		//Renderer->DrawSprite(faceHighRes,
-			//glm::vec2(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), glm::vec2(500.0f, 500.0f), -15.0f, glm::vec3(0.0f, 1.0f, 1.0f));
-		//Texture2D test = ResourceManager::GetTexture("test");
-		//Renderer->DrawSprite(test,
-		//	glm::vec2(0.0f, 0.0f), glm::vec2(500.0f, 500.0f), 45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		//Texture2D face = ResourceManager::GetTexture("face");
-		//Renderer->DrawSprite(face,
-		//	glm::vec2(xPos, yPos), glm::vec2(500.0f, 500.0f), rotation, glm::vec3(1.0f, 1.0f, 1.0f));
-
-		//static_cast<float>(engine->getWidth() /2), static_cast<float>(engine->getHeight() / 2)
 		/* Swap front and back buffers */
 		engine->swapBufferOrFlush();
 
@@ -129,26 +115,6 @@ void createSpriteOnCursor(double deltaTime) {
 	Renderer->DrawSprite(face,
 		glm::vec2(MouseHandler::xpos, MouseHandler::ypos), glm::vec2(100.0f, 100.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	std::cout << MouseHandler::xpos << " " << MouseHandler::ypos << std::endl;
-}
-
-void runW(double deltaTime) {
-	Player->addLocalPositionOffset(Position(0.0f, -100 * deltaTime));
-}
-void runS(double deltaTime) {
-	Player->addLocalPositionOffset(Position(0.0f, 100 * deltaTime));
-}
-void runA(double deltaTime) {
-	Player->addLocalPositionOffset(Position(-100 * deltaTime, 0.0f));
-}
-void runD(double deltaTime) {
-	Player->addLocalPositionOffset(Position(100 * deltaTime, 0.0f));
-
-}
-void runQ(double deltaTime) {
-	rotation -= 10 * deltaTime;
-}
-void runE(double deltaTime) {
-	rotation += 10 * deltaTime;
 }
 
 void shutdown(double deltaTime) {
