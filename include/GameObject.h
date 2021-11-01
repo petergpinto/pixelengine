@@ -20,16 +20,15 @@ public:
 	void setObjectVisible(bool);
 
 	//Position functions
-	Position getAnchorPoint();
+	Transform getAnchorPoint();
 	void setAnchorPoint(Position);
-	Position getLocalPosition();
+	Transform getLocalTransform();
 	void addLocalPositionOffset(Position);
 	void setLocalPosition(Position);
 
 protected:
-	Position anchorPoint;
-	Position localPosition;
-	Size size;
+	Transform anchorPoint;
+	Transform localTransform;
 	Texture2D activeTexture;
 	bool drawObject;
 	SpriteRenderer* renderer;

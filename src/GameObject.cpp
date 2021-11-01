@@ -3,8 +3,7 @@
 GameObject::GameObject(Texture2D objectTexture, SpriteRenderer* Renderer, Position anchorPoint, Position pos, Size size) {
 	this->activeTexture = objectTexture;
 	this->renderer = Renderer;
-	this->size = size;
-	this->localPosition = pos;
+	this->localTransform = Transform(pos,size);
 }
 
 GameObject::~GameObject() {
@@ -13,7 +12,12 @@ GameObject::~GameObject() {
 
 //Render functions
 void GameObject::Render() {
-	this->renderer->DrawSprite(this->activeTexture, glm::vec2(this->anchorPoint.x+this->localPosition.x, this->anchorPoint.y+this->localPosition.y), glm::vec2(this->size.x, this->size.y), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+	this->renderer->DrawSprite(this->activeTexture, 
+		glm::vec2(this->anchorPoint.pos.x+this->localTransform.pos.x, this->anchorPoint.pos.y+this->localTransform.pos.y), 
+		glm::vec2(this->localTransform.size.x, this->localTransform.size.y),
+		0.0f, 
+		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f
+	);
 }
 
 void GameObject::setRenderer(SpriteRenderer* newRenderer) {
@@ -29,7 +33,7 @@ void GameObject::setObjectVisible(bool objectVisible) {
 }
 
 //Position functions
-Position GameObject::getAnchorPoint() {
+Transform GameObject::getAnchorPoint() {
 	return this->anchorPoint;
 }
 
@@ -37,16 +41,16 @@ void GameObject::setAnchorPoint(Position newAnchorPoint) {
 	this->anchorPoint = newAnchorPoint;
 }
 
-Position GameObject::getLocalPosition() {
-	return this->localPosition;
+Transform GameObject::getLocalTransform() {
+	return this->localTransform;
 }
 
 void GameObject::addLocalPositionOffset(Position offset) {
-	this->localPosition += offset;
+	this->localTransform.pos += offset;
 }
 
 void GameObject::setLocalPosition(Position newPosition) {
-	this->localPosition = newPosition;
+	this->localTransform.pos = newPosition;
 }
 
 
