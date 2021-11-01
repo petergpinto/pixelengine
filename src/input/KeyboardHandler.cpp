@@ -1,4 +1,5 @@
 #include "KeyboardHandler.h"
+#include "GameObject.h"
 
 bool KeyboardHandler::keysPressed[] = { 0 };
 

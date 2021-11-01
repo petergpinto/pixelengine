@@ -4,6 +4,7 @@ GameObject::GameObject(Texture2D objectTexture, SpriteRenderer* Renderer, Positi
 	this->activeTexture = objectTexture;
 	this->renderer = Renderer;
 	this->localTransform = Transform(pos,size);
+	this->anchorPoint = Transform(anchorPoint, Size(), Rotation());
 }
 
 GameObject::~GameObject() {

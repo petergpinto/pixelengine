@@ -78,7 +78,9 @@ int RenderTest() {
 
 	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer));
 	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer,
-		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2))));
+		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), 
+		Position(), 
+		Size(100.0f, 100.0f)));
 	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("test"), Renderer, Position(), Position(), Size(500.0f,500.0f)));
 	Player = new GameObject(ResourceManager::GetTexture("face"), Renderer, Position(), Position(xPos, yPos));
 	gameObjects.push_back(Player);
