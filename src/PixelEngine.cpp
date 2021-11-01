@@ -98,6 +98,9 @@ void PixelEngine::renderObjects(SpriteRenderer* renderer) {
 	for (auto& g : this->gameObjects) {
 		if (!g->shouldDelete())
 			g->Render(renderer);
+		else
+		{} //check if there are objects that need deletion here and only run deleteMarkedObjects if there is at least 1
+			//At the same time, we can remove stale registered actions
 	}
 }
 
