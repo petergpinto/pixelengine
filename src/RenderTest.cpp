@@ -27,8 +27,7 @@ int RenderTest() {
 	}
 
 	/* Make the window's context current */
-	glfwMakeContextCurrent(engine->getWindow());
-	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
+	engine->setGLFWContext();
 
 	KeyboardHandler* keyboardHandler = new KeyboardHandler();
 	keyboardHandler->setCallback(engine->getWindow());

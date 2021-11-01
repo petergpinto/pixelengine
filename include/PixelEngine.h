@@ -51,6 +51,7 @@ public:
 	Transform getWorldOrigin();
 	void renderObjects(SpriteRenderer*);
 	void deleteMarkedObjects();
+	void setGLFWContext();
 
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);
