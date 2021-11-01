@@ -39,7 +39,7 @@ private:
 public:
 	std::vector<std::unique_ptr<GameObject>> gameObjects;
 
-	PixelEngine(bool vsync = true);
+	PixelEngine(bool vsync = true, int monitor = 0);
 	~PixelEngine();
 	ERROR checkError();
 	void terminate();

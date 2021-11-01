@@ -3,13 +3,15 @@
 
 #include "PixelEngine.h"
 
-PixelEngine::PixelEngine(bool vsync) {
+PixelEngine::PixelEngine(bool vsync, int monitor) {
 	error = ERROR::NONE;
 	vsyncEnabled = vsync;
 	this->worldOrigin = Transform();
 	if (!PixelEngine::initializeEngine())
 		error = ERROR::GLFW_INIT;
-	currentWindow = PixelEngine::createBorderlessFullscreenWindow(glfwGetPrimaryMonitor(), vsync);
+	int monitorCount;
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+	currentWindow = PixelEngine::createBorderlessFullscreenWindow(monitors[monitor], vsync);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	currentWindowHeight = mode->height;
 	currentWindowWidth = mode->width;
