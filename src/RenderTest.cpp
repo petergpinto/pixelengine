@@ -29,16 +29,10 @@ int RenderTest() {
 	/* Make the window's context current */
 	engine->setGLFWContext();
 
-	//engine->setKeyboardAndMouseCallbacks();
+	engine->setKeyboardAndMouseCallbacks();
 
-	KeyboardHandler* keyboardHandler = new KeyboardHandler();
-	keyboardHandler->setCallback(engine->getWindow());
-	keyboardHandler->registerAction(GLFW_KEY_ESCAPE, std::bind(&shutdown, std::placeholders::_1));
-
-	MouseHandler* mouseHandler = new MouseHandler();
-	mouseHandler->setMouseButtonCallback(engine->getWindow());
-	mouseHandler->setPositionCallback(engine->getWindow());
-	mouseHandler->registerAction(GLFW_MOUSE_BUTTON_LEFT, std::bind(&createSpriteOnCursor, std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_ESCAPE, std::bind(&shutdown, std::placeholders::_1));
+	engine->registerMouseAction(GLFW_MOUSE_BUTTON_LEFT, std::bind(&createSpriteOnCursor, std::placeholders::_1));
 
 	engine->initializeOpenGLViewport();
 
@@ -71,11 +65,11 @@ int RenderTest() {
 	Player player = Player(ResourceManager::GetTexture("face"));
 	std::unique_ptr<Player> p = std::make_unique<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
-	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, p.get(), std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, p.get(), std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, p.get(), std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_U, std::bind(&Player::destroy, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_D, std::bind(&Player::moveRight, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_W, std::bind(&Player::moveUp, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_S, std::bind(&Player::moveDown, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_U, std::bind(&Player::destroy, p.get(), std::placeholders::_1));
 
 	engine->gameObjects.push_back(std::move(p));
 
@@ -91,8 +85,7 @@ int RenderTest() {
 
 		//std::cout << deltaTime << std::endl;
 		engine->fpsCounter(deltaTime, 100);
-		keyboardHandler->handleInput(deltaTime);
-		mouseHandler->handleInput(deltaTime);
+		engine->handleKeyboardAndMouseInput(deltaTime);
 
 		//Call Render() on each GameObject, except if it is marked for deletion
 		engine->renderObjects(Renderer);

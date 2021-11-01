@@ -123,3 +123,16 @@ void PixelEngine::initializeOpenGLViewport() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
+
+void PixelEngine::registerMouseAction(int button, std::function<void(double)> action) {
+	mouseHandler->registerAction(button, action);
+}
+
+void PixelEngine::registerKeyboardAction(int key, std::function<void(double)> action) {
+	keyboardHandler->registerAction(key, action);
+}
+
+void PixelEngine::handleKeyboardAndMouseInput(double deltaTime) {
+	mouseHandler->handleInput(deltaTime);
+	keyboardHandler->handleInput(deltaTime);
+}

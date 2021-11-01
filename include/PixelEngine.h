@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 #include "SpriteRenderer.h"
 #include "ResourceManager.h"
@@ -58,6 +59,9 @@ public:
 	void setGLFWContext();
 	void setKeyboardAndMouseCallbacks();
 	void initializeOpenGLViewport();
+	void registerMouseAction(int, std::function<void(double)>);
+	void registerKeyboardAction(int, std::function<void(double)>);
+	void handleKeyboardAndMouseInput(double);
 
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);
