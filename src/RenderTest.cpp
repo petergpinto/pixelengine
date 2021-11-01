@@ -96,12 +96,10 @@ int RenderTest() {
 		keyboardHandler->handleInput(deltaTime);
 		mouseHandler->handleInput(deltaTime);
 
+		//Call Render() on each GameObject, except if it is marked for deletion
 		engine->renderObjects(Renderer);
-
 		//Delete objects marked for deletion
-		engine->gameObjects.erase(std::remove_if(engine->gameObjects.begin(), engine->gameObjects.end(), [&](std::unique_ptr<GameObject> & obj) {
-			return obj->shouldDelete();
-		}), engine->gameObjects.end());
+		engine->deleteMarkedObjects();
 
 		/* Swap front and back buffers */
 		engine->swapBufferOrFlush();

@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+#include <algorithm>
 
 #include "SpriteRenderer.h"
 #include "ResourceManager.h"
@@ -49,6 +50,7 @@ public:
 	void swapBufferOrFlush();
 	Transform getWorldOrigin();
 	void renderObjects(SpriteRenderer*);
+	void deleteMarkedObjects();
 
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);

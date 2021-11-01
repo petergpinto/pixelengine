@@ -96,3 +96,9 @@ void PixelEngine::renderObjects(SpriteRenderer* renderer) {
 			g->Render(renderer);
 	}
 }
+
+void PixelEngine::deleteMarkedObjects() {
+	this->gameObjects.erase(std::remove_if(this->gameObjects.begin(), this->gameObjects.end(), [&](std::unique_ptr<GameObject> & obj) {
+		return obj->shouldDelete();
+	}), this->gameObjects.end());
+}
