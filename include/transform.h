@@ -40,7 +40,7 @@ struct Position {
 struct Size {
 	double x;
 	double y;
-	Size(double x = 100.0f, double y = 100.0f)
+	Size(double x = 1.0f, double y = 1.0f)
 		: x(x), y(y)
 	{
 	}
