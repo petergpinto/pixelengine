@@ -73,10 +73,10 @@ int RenderTest() {
 	Player player = Player(ResourceManager::GetTexture("face"), Renderer);
 	std::unique_ptr<Player> p = std::make_unique<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
-	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, p.get(), std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, p.get(), std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, p.get(), std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p, std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, p, std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, p, std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, p, std::placeholders::_1));
 	
 	gameObjects.push_back(std::move(p));
 
