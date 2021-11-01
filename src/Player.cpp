@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(Texture2D tex, SpriteRenderer* Renderer) : GameObject(tex, Renderer, Position(), Position(), Size(500.0f, 500.0f)) {
+Player::Player(Texture2D tex) : GameObject(tex, Position(), Position(), Size(500.0f, 500.0f)) {
 
 }
 void Player::moveLeft(double deltaTime) {
@@ -14,4 +14,8 @@ void Player::moveUp(double deltaTime) {
 }
 void Player::moveDown(double deltaTime) {
 	this->localTransform.pos.y += 100.0f * deltaTime;
+}
+
+void Player::destroy(double deltaTime) {
+	markedForDeletion = true;
 }

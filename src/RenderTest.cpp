@@ -6,13 +6,13 @@
 #include "MouseHandler.h"
 #include "GameObject.h"
 #include "Player.h"
+#include <algorithm>
+#include <memory>
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
 PixelEngine* engine;
 SpriteRenderer  *Renderer;
-std::vector<GameObject*> gameObjects = {};
-Player* player;
 void shutdown(double);
 void createSpriteOnCursor(double);
 
@@ -28,22 +28,14 @@ int RenderTest() {
 	}
 
 	/* Make the window's context current */
-	glfwMakeContextCurrent(engine->getWindow());
-	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
+	engine->setGLFWContext();
 
-	KeyboardHandler* keyboardHandler = new KeyboardHandler();
-	keyboardHandler->setCallback(engine->getWindow());
-	keyboardHandler->registerAction(GLFW_KEY_ESCAPE, shutdown);
+	engine->setKeyboardAndMouseCallbacks();
 
-	MouseHandler* mouseHandler = new MouseHandler();
-	mouseHandler->setMouseButtonCallback(engine->getWindow());
-	mouseHandler->setPositionCallback(engine->getWindow());
-	mouseHandler->registerAction(GLFW_MOUSE_BUTTON_LEFT, createSpriteOnCursor);
+	engine->registerKeyboardAction(GLFW_KEY_ESCAPE, std::bind(&shutdown, std::placeholders::_1));
+	engine->registerMouseAction(GLFW_MOUSE_BUTTON_LEFT, std::bind(&createSpriteOnCursor, std::placeholders::_1));
 
-	glViewport(0, 0, engine->getWidth(), engine->getHeight());
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	engine->initializeOpenGLViewport();
 
 	ResourceManager::LoadShader("../resources/shaders/sprite.vs", "../resources/shaders/sprite.frag", nullptr, "sprite");
 
@@ -65,20 +57,22 @@ int RenderTest() {
 	yPos = static_cast<float>(engine->getHeight() / 2);
 	rotation = 0.0f;
 
-	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer));
-	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer,
+	engine->gameObjects.push_back(std::make_unique<GameObject> (GameObject(ResourceManager::GetTexture("faceHighRes"))));
+	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("faceHighRes"),
 		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), 
 		Position(), 
-		Size(100.0f, 100.0f)));
-	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("test"), Renderer, Position(), Position(), Size(500.0f,500.0f)));
-	player = new Player(ResourceManager::GetTexture("face"), Renderer);
+		Size(100.0f, 100.0f))));
+	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("test"), Position(), Position(), Size(500.0f,500.0f))));
+	Player player = Player(ResourceManager::GetTexture("face"));
+	std::unique_ptr<Player> p = std::make_unique<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
-	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, player, std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, player, std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, player, std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, player, std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_D, std::bind(&Player::moveRight, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_W, std::bind(&Player::moveUp, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_S, std::bind(&Player::moveDown, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_U, std::bind(&Player::destroy, p.get(), std::placeholders::_1));
 
-	gameObjects.push_back(player);
+	engine->gameObjects.push_back(std::move(p));
 
 	/* Loop until the user closes the window */
 	while (!PixelEngine::shouldTerminate(engine->getWindow()))
@@ -92,12 +86,12 @@ int RenderTest() {
 
 		//std::cout << deltaTime << std::endl;
 		engine->fpsCounter(deltaTime, 100);
-		keyboardHandler->handleInput(deltaTime);
-		mouseHandler->handleInput(deltaTime);
+		engine->handleKeyboardAndMouseInput(deltaTime);
 
-		for (GameObject* g : gameObjects) {
-			g->Render();
-		}
+		//Call Render() on each GameObject, except if it is marked for deletion
+		engine->renderObjects(Renderer);
+		//Delete objects marked for deletion
+		engine->deleteMarkedObjects();
 
 		/* Swap front and back buffers */
 		engine->swapBufferOrFlush();

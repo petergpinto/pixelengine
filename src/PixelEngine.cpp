@@ -3,18 +3,22 @@
 
 #include "PixelEngine.h"
 
-PixelEngine::PixelEngine(bool vsync) {
+PixelEngine::PixelEngine(bool vsync, int monitor) {
 	error = ERROR::NONE;
 	vsyncEnabled = vsync;
 	this->worldOrigin = Transform();
 	if (!PixelEngine::initializeEngine())
 		error = ERROR::GLFW_INIT;
-	currentWindow = PixelEngine::createBorderlessFullscreenWindow(glfwGetPrimaryMonitor(), vsync);
+	int monitorCount;
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+	currentWindow = PixelEngine::createBorderlessFullscreenWindow(monitors[monitor], vsync);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	currentWindowHeight = mode->height;
 	currentWindowWidth = mode->width;
 	if (!currentWindow)
 		error = ERROR::GLFW_WINDOW_CREATE;
+	mouseHandler = new MouseHandler();
+	keyboardHandler = new KeyboardHandler();
 }
 
 PixelEngine::~PixelEngine() {
@@ -88,4 +92,47 @@ void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 
 Transform PixelEngine::getWorldOrigin() {
 	return this->worldOrigin;
+}
+
+void PixelEngine::renderObjects(SpriteRenderer* renderer) {
+	for (auto& g : this->gameObjects) {
+		if (!g->shouldDelete())
+			g->Render(renderer);
+	}
+}
+
+void PixelEngine::deleteMarkedObjects() {
+	this->gameObjects.erase(std::remove_if(this->gameObjects.begin(), this->gameObjects.end(), [&](std::unique_ptr<GameObject> & obj) {
+		return obj->shouldDelete();
+	}), this->gameObjects.end());
+}
+
+void PixelEngine::setGLFWContext() {
+	glfwMakeContextCurrent(currentWindow);
+	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
+}
+
+void PixelEngine::setKeyboardAndMouseCallbacks() {
+	keyboardHandler->setCallback(currentWindow);
+	mouseHandler->setMouseButtonCallback(currentWindow);
+	mouseHandler->setPositionCallback(currentWindow);
+}
+
+void PixelEngine::initializeOpenGLViewport() {
+	glViewport(0, 0, this->getWidth(), this->getHeight());
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void PixelEngine::registerMouseAction(int button, std::function<void(double)> action) {
+	mouseHandler->registerAction(button, action);
+}
+
+void PixelEngine::registerKeyboardAction(int key, std::function<void(double)> action) {
+	keyboardHandler->registerAction(key, action);
+}
+
+void PixelEngine::handleKeyboardAndMouseInput(double deltaTime) {
+	mouseHandler->handleInput(deltaTime);
+	keyboardHandler->handleInput(deltaTime);
 }

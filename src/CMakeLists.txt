@@ -36,5 +36,4 @@ find_package(OpenGL REQUIRED)
 
 target_link_libraries(PixelEngine OpenGL::GL)
 
-
 # TODO: Add tests and install targets if needed.
