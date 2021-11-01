@@ -6,6 +6,7 @@
 #include "MouseHandler.h"
 #include "GameObject.h"
 #include "Player.h"
+#include <algorithm>
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
@@ -64,20 +65,21 @@ int RenderTest() {
 	yPos = static_cast<float>(engine->getHeight() / 2);
 	rotation = 0.0f;
 
-	gameObjects.push_back(std::make_unique<GameObject> (GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer)));
-	gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer,
+	gameObjects.push_back(std::make_unique<GameObject> (GameObject(ResourceManager::GetTexture("faceHighRes"))));
+	gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("faceHighRes"),
 		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), 
 		Position(), 
 		Size(100.0f, 100.0f))));
-	gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("test"), Renderer, Position(), Position(), Size(500.0f,500.0f))));
-	Player player = Player(ResourceManager::GetTexture("face"), Renderer);
+	gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("test"), Position(), Position(), Size(500.0f,500.0f))));
+	Player player = Player(ResourceManager::GetTexture("face"));
 	std::unique_ptr<Player> p = std::make_unique<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
-	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p, std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, p, std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, p, std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, p, std::placeholders::_1));
-	
+	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, p.get(), std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, p.get(), std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, p.get(), std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_U, std::bind(&Player::destroy, p.get(), std::placeholders::_1));
+
 	gameObjects.push_back(std::move(p));
 
 	/* Loop until the user closes the window */
@@ -96,13 +98,14 @@ int RenderTest() {
 		mouseHandler->handleInput(deltaTime);
 
 		for (auto& g : gameObjects) {
-			try {
-				g->Render();
-			}
-			catch (const std::exception& e) {
-
-			}
+			if (!g->shouldDelete())
+				g->Render(Renderer);
 		}
+
+		//Delete objects marked for deletion
+		gameObjects.erase(std::remove_if(gameObjects.begin(), gameObjects.end(), [&](std::unique_ptr<GameObject> & obj) {
+			return obj->shouldDelete();
+		}), gameObjects.end());		
 
 		/* Swap front and back buffers */
 		engine->swapBufferOrFlush();

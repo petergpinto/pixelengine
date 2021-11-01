@@ -10,12 +10,11 @@
 
 class GameObject {
 public:
-	GameObject(Texture2D, SpriteRenderer*, Position anchorPoint = Position(), Position pos = Position(), Size size = Size());
+	GameObject(Texture2D, Position anchorPoint = Position(), Position pos = Position(), Size size = Size());
 	~GameObject();
 
 	//Render functions
-	void setRenderer(SpriteRenderer*);
-	void Render();
+	void Render(SpriteRenderer*);
 	bool isObjectVisible();
 	void setObjectVisible(bool);
 
@@ -25,13 +24,15 @@ public:
 	Transform getLocalTransform();
 	void addLocalPositionOffset(Position);
 	void setLocalPosition(Position);
+	
+	bool shouldDelete();
 
 protected:
 	Transform anchorPoint;
 	Transform localTransform;
 	Texture2D activeTexture;
 	bool drawObject;
-	SpriteRenderer* renderer;
+	bool markedForDeletion;
 
 private:
 
@@ -39,8 +40,8 @@ private:
 
 class AnimatedGameObject : public GameObject {
 public:
-	AnimatedGameObject(std::vector<Texture2D>, SpriteRenderer*);
-	void Render();
+	AnimatedGameObject(std::vector<Texture2D>);
+	void Render(SpriteRenderer*);
 private:
 	std::vector<Texture2D> animationTextureSet;
 	int currentAnimationTextureIndex;

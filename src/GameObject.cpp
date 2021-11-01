@@ -1,10 +1,10 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Texture2D objectTexture, SpriteRenderer* Renderer, Position anchorPoint, Position pos, Size size) {
+GameObject::GameObject(Texture2D objectTexture, Position anchorPoint, Position pos, Size size) {
 	this->activeTexture = objectTexture;
-	this->renderer = Renderer;
 	this->localTransform = Transform(pos,size);
 	this->anchorPoint = Transform(anchorPoint, Size(), Rotation());
+	markedForDeletion = false;
 }
 
 GameObject::~GameObject() {
@@ -12,17 +12,14 @@ GameObject::~GameObject() {
 }
 
 //Render functions
-void GameObject::Render() {
-	this->renderer->DrawSprite(this->activeTexture, 
+void GameObject::Render(SpriteRenderer* renderer) {
+	renderer->DrawSprite(this->activeTexture, 
 		glm::vec2(this->anchorPoint.pos.x+this->localTransform.pos.x, this->anchorPoint.pos.y+this->localTransform.pos.y), 
 		glm::vec2(this->localTransform.size.x, this->localTransform.size.y),
 		0.0f, 
-		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f
+		glm::vec3(1.0f, 1.0f, 1.0f), 
+		1.0f
 	);
-}
-
-void GameObject::setRenderer(SpriteRenderer* newRenderer) {
-	this->renderer = newRenderer;
 }
 
 bool GameObject::isObjectVisible() {
@@ -54,14 +51,18 @@ void GameObject::setLocalPosition(Position newPosition) {
 	this->localTransform.pos = newPosition;
 }
 
+bool GameObject::shouldDelete() {
+	return this->markedForDeletion;
+}
 
-AnimatedGameObject::AnimatedGameObject(std::vector<Texture2D> animationSet, SpriteRenderer* renderer) : GameObject(animationSet.at(0), renderer) {
+
+AnimatedGameObject::AnimatedGameObject(std::vector<Texture2D> animationSet) : GameObject(animationSet.at(0)) {
 	this->currentAnimationTextureIndex = 0;
 	this->animationTextureSet = animationSet;
 }
 
-void AnimatedGameObject::Render() {
+void AnimatedGameObject::Render(SpriteRenderer* renderer) {
 	this->activeTexture = this->animationTextureSet.at(this->currentAnimationTextureIndex);
 	this->currentAnimationTextureIndex++;
-	GameObject::Render();
+	GameObject::Render(renderer);
 }
