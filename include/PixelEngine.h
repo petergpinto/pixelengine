@@ -4,13 +4,16 @@
 #pragma once
 
 #include <iostream>
-#include "SpriteRenderer.h"
-#include "ResourceManager.h"
-#include "transform.h"
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <vector>
+
+#include "SpriteRenderer.h"
+#include "ResourceManager.h"
+#include "transform.h"
+#include "GameObject.h"
 
 
 enum ERROR {
@@ -27,13 +30,14 @@ private:
 	float currentWindowWidth;
 	bool vsyncEnabled;
 	Transform worldOrigin;
-	
+
 	//FPS counter vars
 	double fps, fpsTotalTime = 0.0f;
 	int fpsFrameCount = 0;
 
-
 public:
+	std::vector<std::unique_ptr<GameObject>> gameObjects;
+
 	PixelEngine(bool vsync = true);
 	~PixelEngine();
 	ERROR checkError();

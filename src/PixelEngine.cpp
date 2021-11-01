@@ -15,6 +15,7 @@ PixelEngine::PixelEngine(bool vsync) {
 	currentWindowWidth = mode->width;
 	if (!currentWindow)
 		error = ERROR::GLFW_WINDOW_CREATE;
+	gameObjects = {};
 }
 
 PixelEngine::~PixelEngine() {
