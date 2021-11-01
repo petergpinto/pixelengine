@@ -6,6 +6,7 @@
 PixelEngine::PixelEngine(bool vsync) {
 	error = ERROR::NONE;
 	vsyncEnabled = vsync;
+	this->worldOrigin = Transform();
 	if (!PixelEngine::initializeEngine())
 		error = ERROR::GLFW_INIT;
 	currentWindow = PixelEngine::createBorderlessFullscreenWindow(glfwGetPrimaryMonitor(), vsync);
@@ -83,4 +84,8 @@ void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 	else {
 		fpsFrameCount++;
 	}
+}
+
+Transform PixelEngine::getWorldOrigin() {
+	return this->worldOrigin;
 }

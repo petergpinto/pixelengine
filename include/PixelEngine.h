@@ -6,6 +6,7 @@
 #include <iostream>
 #include "SpriteRenderer.h"
 #include "ResourceManager.h"
+#include "transform.h"
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -25,6 +26,7 @@ private:
 	float currentWindowHeight;
 	float currentWindowWidth;
 	bool vsyncEnabled;
+	Transform worldOrigin;
 	
 	//FPS counter vars
 	double fps, fpsTotalTime = 0.0f;
@@ -41,6 +43,8 @@ public:
 	float getHeight();
 	void fpsCounter(double, int, bool debugPrint = false);
 	void swapBufferOrFlush();
+	Transform getWorldOrigin();
+
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);
 	static int shouldTerminate(GLFWwindow*);
