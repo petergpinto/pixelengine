@@ -5,7 +5,7 @@
 #include "KeyboardHandler.h"
 #include "MouseHandler.h"
 #include "GameObject.h"
-#include "Player.cpp"
+#include "Player.h"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
