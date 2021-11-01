@@ -11,8 +11,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 float xPos, yPos, deltaTime, rotation;
 PixelEngine* engine;
 SpriteRenderer  *Renderer;
-std::vector<GameObject*> gameObjects = {};
-Player* player;
+std::vector<std::unique_ptr<GameObject>> gameObjects = {};
 void shutdown(double);
 void createSpriteOnCursor(double);
 
@@ -65,20 +64,21 @@ int RenderTest() {
 	yPos = static_cast<float>(engine->getHeight() / 2);
 	rotation = 0.0f;
 
-	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer));
-	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer,
+	gameObjects.push_back(std::make_unique<GameObject> (GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer)));
+	gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("faceHighRes"), Renderer,
 		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), 
 		Position(), 
-		Size(100.0f, 100.0f)));
-	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("test"), Renderer, Position(), Position(), Size(500.0f,500.0f)));
-	player = new Player(ResourceManager::GetTexture("face"), Renderer);
+		Size(100.0f, 100.0f))));
+	gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("test"), Renderer, Position(), Position(), Size(500.0f,500.0f))));
+	Player player = Player(ResourceManager::GetTexture("face"), Renderer);
+	std::unique_ptr<Player> p = std::make_unique<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
-	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, player, std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, player, std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, player, std::placeholders::_1));
-	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, player, std::placeholders::_1));
-
-	gameObjects.push_back(player);
+	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, p.get(), std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, p.get(), std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, p.get(), std::placeholders::_1));
+	
+	gameObjects.push_back(std::move(p));
 
 	/* Loop until the user closes the window */
 	while (!PixelEngine::shouldTerminate(engine->getWindow()))
@@ -95,8 +95,13 @@ int RenderTest() {
 		keyboardHandler->handleInput(deltaTime);
 		mouseHandler->handleInput(deltaTime);
 
-		for (GameObject* g : gameObjects) {
-			g->Render();
+		for (auto& g : gameObjects) {
+			try {
+				g->Render();
+			}
+			catch (const std::exception& e) {
+
+			}
 		}
 
 		/* Swap front and back buffers */
