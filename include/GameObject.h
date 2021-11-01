@@ -5,55 +5,8 @@
 #include <vector>
 #include "texture.h"
 #include "SpriteRenderer.h"
+#include "transform.h"
 
-struct Position {
-	double x;
-	double y;
-	Position(double x = 0.0f, double y = 0.0f)
-		: x(x), y(y)
-	{
-	}
-
-	Position& operator=(const Position& a) {
-		x = a.x;
-		y = a.y;
-		return *this;
-	}
-
-	Position operator+(const Position& a) const {
-		return Position(a.x + x, a.y + y);
-	}
-
-	Position& operator+=(const Position& a) {
-		x = a.x+x;
-		y = a.y+y;
-		return *this;
-	}
-};
-
-struct Size {
-	double x;
-	double y;
-	Size(double x = 100.0f, double y = 100.0f)
-		: x(x), y(y)
-	{
-	}
-	Size& operator=(const Position& a) {
-		x = a.x;
-		y = a.y;
-		return *this;
-	}
-
-	Size operator+(const Position& a) const {
-		return Size(a.x + x, a.y + y);
-	}
-
-	Size& operator+=(const Position& a) {
-		x = a.x + x;
-		y = a.y + y;
-		return *this;
-	}
-};
 
 class GameObject {
 public:
