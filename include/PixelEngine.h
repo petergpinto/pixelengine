@@ -11,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
+#include <memory>
 
 #include "SpriteRenderer.h"
 #include "ResourceManager.h"

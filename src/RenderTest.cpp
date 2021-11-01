@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Player.h"
 #include <algorithm>
+#include <memory>
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
