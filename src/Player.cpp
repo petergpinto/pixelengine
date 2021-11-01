@@ -13,4 +13,10 @@ public:
 	void moveRight(double deltaTime) {
 		this->localTransform.pos.x += 100.0f * deltaTime;
 	}
+	void moveUp(double deltaTime) {
+		this->localTransform.pos.y -= 100.0f * deltaTime;
+	}
+	void moveDown(double deltaTime) {
+		this->localTransform.pos.y += 100.0f * deltaTime;
+	}
 };

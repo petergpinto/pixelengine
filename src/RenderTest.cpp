@@ -72,8 +72,11 @@ int RenderTest() {
 		Size(100.0f, 100.0f)));
 	gameObjects.push_back(new GameObject(ResourceManager::GetTexture("test"), Renderer, Position(), Position(), Size(500.0f,500.0f)));
 	player = new Player(ResourceManager::GetTexture("face"), Renderer);
+	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
 	keyboardHandler->registerAction(GLFW_KEY_A, std::bind(&Player::moveLeft, player, std::placeholders::_1));
 	keyboardHandler->registerAction(GLFW_KEY_D, std::bind(&Player::moveRight, player, std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_W, std::bind(&Player::moveUp, player, std::placeholders::_1));
+	keyboardHandler->registerAction(GLFW_KEY_S, std::bind(&Player::moveDown, player, std::placeholders::_1));
 
 	gameObjects.push_back(player);
 
