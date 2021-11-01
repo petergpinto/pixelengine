@@ -36,5 +36,6 @@ find_package(OpenGL REQUIRED)
 
 target_link_libraries(PixelEngine OpenGL::GL)
 
+target_compile_features(PixelEngine PRIVATE cxx_std_17)
 
 # TODO: Add tests and install targets if needed.
