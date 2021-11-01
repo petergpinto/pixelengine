@@ -89,3 +89,10 @@ void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 Transform PixelEngine::getWorldOrigin() {
 	return this->worldOrigin;
 }
+
+void PixelEngine::renderObjects(SpriteRenderer* renderer) {
+	for (auto& g : this->gameObjects) {
+		if (!g->shouldDelete())
+			g->Render(renderer);
+	}
+}

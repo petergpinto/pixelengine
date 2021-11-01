@@ -48,6 +48,7 @@ public:
 	void fpsCounter(double, int, bool debugPrint = false);
 	void swapBufferOrFlush();
 	Transform getWorldOrigin();
+	void renderObjects(SpriteRenderer*);
 
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);
