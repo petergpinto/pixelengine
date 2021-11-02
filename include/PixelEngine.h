@@ -37,6 +37,7 @@ private:
 	Transform worldOrigin;
 	KeyboardHandler* keyboardHandler;
 	MouseHandler* mouseHandler;
+	bool needRunDeletion = false;
 
 	//FPS counter vars
 	double fps, fpsTotalTime = 0.0f;

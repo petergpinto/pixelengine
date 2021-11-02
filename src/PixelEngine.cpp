@@ -99,15 +99,22 @@ void PixelEngine::renderObjects(SpriteRenderer* renderer) {
 		if (!g->shouldDelete())
 			g->Render(renderer);
 		else
-		{} //check if there are objects that need deletion here and only run deleteMarkedObjects if there is at least 1
-			//At the same time, we can remove stale registered actions
+			needRunDeletion = true; //check if there are objects that need deletion here and only run deleteMarkedObjects if there is at least 1
+									//At the same time, we can remove stale registered actions
 	}
 }
 
 void PixelEngine::deleteMarkedObjects() {
-	this->gameObjects.erase(std::remove_if(this->gameObjects.begin(), this->gameObjects.end(), [&](std::unique_ptr<GameObject> & obj) {
-		return obj->shouldDelete();
-	}), this->gameObjects.end());
+	if (needRunDeletion) {
+		this->gameObjects.erase(std::remove_if(this->gameObjects.begin(), this->gameObjects.end(), [&](std::unique_ptr<GameObject> & obj) {
+			return obj->shouldDelete();
+		}), this->gameObjects.end());
+		needRunDeletion = false;
+		return;
+	}
+	else {
+		return;
+	}
 }
 
 void PixelEngine::setGLFWContext() {
