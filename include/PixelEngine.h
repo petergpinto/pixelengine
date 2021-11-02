@@ -56,7 +56,8 @@ public:
 	float getHeight();
 	void fpsCounter(double, int, bool debugPrint = false);
 	void swapBufferOrFlush();
-	Transform getWorldOrigin();
+	Transform* getWorldOrigin();
+	void addTransformToOrigin(Transform);
 	void renderObjects(SpriteRenderer*);
 	void deleteMarkedObjects();
 	void setGLFWContext();
@@ -66,6 +67,7 @@ public:
 	void registerKeyboardAction(int, std::function<void(double)>);
 	void handleKeyboardAndMouseInput(double);
 	Position getMousePosition();
+	Position getMouseMovement();
 
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);

@@ -15,6 +15,7 @@ PixelEngine* engine;
 SpriteRenderer  *Renderer;
 void shutdown(double);
 void createSpriteOnCursor(double);
+void dragWorld(double);
 
 int keyPressed = 0;
 
@@ -33,7 +34,7 @@ int RenderTest() {
 	engine->setKeyboardAndMouseCallbacks();
 
 	engine->registerKeyboardAction(GLFW_KEY_ESCAPE, std::bind(&shutdown, std::placeholders::_1));
-	engine->registerMouseAction(GLFW_MOUSE_BUTTON_LEFT, std::bind(&createSpriteOnCursor, std::placeholders::_1));
+	engine->registerMouseAction(GLFW_MOUSE_BUTTON_LEFT, std::bind(&dragWorld, std::placeholders::_1));
 
 	engine->initializeOpenGLViewport();
 
@@ -57,13 +58,13 @@ int RenderTest() {
 	yPos = static_cast<float>(engine->getHeight() / 2);
 	rotation = 0.0f;
 
-	engine->gameObjects.push_back(std::make_unique<GameObject> (GameObject(ResourceManager::GetTexture("faceHighRes"))));
+	engine->gameObjects.push_back(std::make_unique<GameObject> (GameObject(ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin())));
 	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("faceHighRes"),
-		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), 
-		Position(), 
+		engine->getWorldOrigin(),
+		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)),  
 		Size(100.0f, 100.0f))));
-	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("test"), Position(), Position(), Size(500.0f,500.0f))));
-	Player player = Player(ResourceManager::GetTexture("face"));
+	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("test"), engine->getWorldOrigin(), Position(), Size(500.0f,500.0f))));
+	Player player = Player(ResourceManager::GetTexture("face"), engine->getWorldOrigin());
 	std::unique_ptr<Player> p = std::make_unique<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
 	engine->registerKeyboardAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
@@ -105,7 +106,12 @@ int RenderTest() {
 }
 
 void createSpriteOnCursor(double deltaTime) {
-	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), Position(), engine->getMousePosition(), Size(100.0f, 100.0f))));
+	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), engine->getWorldOrigin(), engine->getMousePosition(), Size(100.0f, 100.0f))));
+}
+
+void dragWorld(double deltaTime) {
+	double magnitude = 100.0f;
+	engine->addTransformToOrigin(Transform(Position(engine->getMouseMovement().x * deltaTime * magnitude, engine->getMouseMovement().y * deltaTime * magnitude)));
 }
 
 void shutdown(double deltaTime) {

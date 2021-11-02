@@ -137,6 +137,7 @@ struct Transform {
 		pos = pos + a.pos;
 		size = size + a.size;
 		rot = rot + a.rot;
+		return *this;
 	}
 
 	//Subtraction operators

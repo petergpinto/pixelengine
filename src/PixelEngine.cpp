@@ -90,8 +90,8 @@ void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 	}
 }
 
-Transform PixelEngine::getWorldOrigin() {
-	return this->worldOrigin;
+Transform* PixelEngine::getWorldOrigin() {
+	return &(this->worldOrigin);
 }
 
 void PixelEngine::renderObjects(SpriteRenderer* renderer) {
@@ -149,4 +149,12 @@ void PixelEngine::handleKeyboardAndMouseInput(double deltaTime) {
 
 Position PixelEngine::getMousePosition() {
 	return Position(mouseHandler->xpos, mouseHandler->ypos);
+}
+
+void PixelEngine::addTransformToOrigin(Transform offset) { 
+	this->worldOrigin += offset;
+}
+
+Position PixelEngine::getMouseMovement() {
+	return mouseHandler->getDeltaMouseMovement();
 }

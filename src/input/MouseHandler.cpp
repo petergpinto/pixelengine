@@ -27,6 +27,8 @@ void MouseHandler::handleInput(double deltaTime) {
 			}
 		}
 	}
+	previousXpos = MouseHandler::xpos;
+	previousYpos = MouseHandler::ypos;
 }
 
 void MouseHandler::registerAction(int button, std::function<void(double)> action) {
@@ -55,4 +57,8 @@ void MouseHandler::mouse_button_callback(GLFWwindow* window, int button, int act
 		else if (action == GLFW_RELEASE)
 			MouseHandler::mouseButtonsPressed[button] = false;
 	}
+}
+
+Position MouseHandler::getDeltaMouseMovement() {
+	return Position(MouseHandler::xpos - this->previousXpos, MouseHandler::ypos - this->previousYpos);
 }

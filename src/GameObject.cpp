@@ -1,9 +1,9 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Texture2D objectTexture, Position anchorPoint, Position pos, Size size) {
+GameObject::GameObject(Texture2D objectTexture, Transform* anchorPoint, Position pos, Size size) {
 	this->activeTexture = objectTexture;
 	this->localTransform = Transform(pos,size);
-	this->anchorPoint = Transform(anchorPoint, Size(), Rotation());
+	this->anchorPoint = anchorPoint;
 	markedForDeletion = false;
 }
 
@@ -14,7 +14,7 @@ GameObject::~GameObject() {
 //Render functions
 void GameObject::Render(SpriteRenderer* renderer) {
 	renderer->DrawSprite(this->activeTexture, 
-		glm::vec2(this->anchorPoint.pos.x+this->localTransform.pos.x, this->anchorPoint.pos.y+this->localTransform.pos.y), 
+		glm::vec2(this->anchorPoint->pos.x + this->localTransform.pos.x, this->anchorPoint->pos.y+this->localTransform.pos.y), 
 		glm::vec2(this->localTransform.size.x, this->localTransform.size.y),
 		0.0f, 
 		glm::vec3(1.0f, 1.0f, 1.0f), 
@@ -31,11 +31,11 @@ void GameObject::setObjectVisible(bool objectVisible) {
 }
 
 //Position functions
-Transform GameObject::getAnchorPoint() {
-	return this->anchorPoint;
+Transform* GameObject::getAnchorPoint() {
+	return (this->anchorPoint);
 }
 
-void GameObject::setAnchorPoint(Position newAnchorPoint) {
+void GameObject::setAnchorPoint(Transform* newAnchorPoint) {
 	this->anchorPoint = newAnchorPoint;
 }
 
@@ -56,7 +56,7 @@ bool GameObject::shouldDelete() {
 }
 
 
-AnimatedGameObject::AnimatedGameObject(std::vector<Texture2D> animationSet) : GameObject(animationSet.at(0)) {
+AnimatedGameObject::AnimatedGameObject(std::vector<Texture2D> animationSet, Transform* anchorPoint) : GameObject(animationSet.at(0), anchorPoint) {
 	this->currentAnimationTextureIndex = 0;
 	this->animationTextureSet = animationSet;
 }
