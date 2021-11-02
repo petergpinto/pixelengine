@@ -61,9 +61,14 @@ int RenderTest() {
 	engine->gameObjects.push_back(std::make_unique<GameObject> (GameObject(ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin())));
 	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("faceHighRes"),
 		engine->getWorldOrigin(),
-		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)),  
-		Size(100.0f, 100.0f))));
-	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("test"), engine->getWorldOrigin(), Position(), Size(500.0f,500.0f))));
+		Transform(Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)),  Size(100.0f, 100.0f), Rotation())
+	)));
+	engine->gameObjects.push_back(std::make_unique<GameObject>(
+		GameObject(ResourceManager::GetTexture("test"), 
+			engine->getWorldOrigin(), 
+			Transform(Position(), Size(500.0f,500.0f), Rotation())
+		))
+	);
 	Player player = Player(ResourceManager::GetTexture("face"), engine->getWorldOrigin());
 	std::unique_ptr<Player> p = std::make_unique<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
@@ -106,7 +111,7 @@ int RenderTest() {
 }
 
 void createSpriteOnCursor(double deltaTime) {
-	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), engine->getWorldOrigin(), engine->getMousePosition(), Size(100.0f, 100.0f))));
+	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), engine->getWorldOrigin(), Transform(engine->getMousePosition(), Size(100.0f, 100.0f)))));
 }
 
 void dragWorld(double deltaTime) {

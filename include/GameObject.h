@@ -10,7 +10,7 @@
 
 class GameObject {
 public:
-	GameObject(Texture2D, Transform* anchorPoint, Position pos = Position(), Size size = Size());
+	GameObject(Texture2D, Transform* anchorPoint, Transform objectTransform = Transform());
 	~GameObject();
 
 	//Render functions

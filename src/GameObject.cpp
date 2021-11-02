@@ -1,8 +1,8 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Texture2D objectTexture, Transform* anchorPoint, Position pos, Size size) {
+GameObject::GameObject(Texture2D objectTexture, Transform* anchorPoint, Transform objectTransform) {
 	this->activeTexture = objectTexture;
-	this->localTransform = Transform(pos,size);
+	this->localTransform = objectTransform;
 	this->anchorPoint = anchorPoint;
 	markedForDeletion = false;
 }
