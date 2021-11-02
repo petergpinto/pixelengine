@@ -19,6 +19,7 @@
 #include "GameObject.h"
 #include "MouseHandler.h"
 #include "KeyboardHandler.h"
+#include "transform.h"
 
 
 enum ERROR {
@@ -64,6 +65,7 @@ public:
 	void registerMouseAction(int, std::function<void(double)>);
 	void registerKeyboardAction(int, std::function<void(double)>);
 	void handleKeyboardAndMouseInput(double);
+	Position getMousePosition();
 
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);

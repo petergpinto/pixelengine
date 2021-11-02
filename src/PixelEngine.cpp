@@ -146,3 +146,7 @@ void PixelEngine::handleKeyboardAndMouseInput(double deltaTime) {
 	mouseHandler->handleInput(deltaTime);
 	keyboardHandler->handleInput(deltaTime);
 }
+
+Position PixelEngine::getMousePosition() {
+	return Position(mouseHandler->xpos, mouseHandler->ypos);
+}
