@@ -30,25 +30,8 @@ ERROR PixelEngine::checkError() {
 	return error;
 }
 
-void PixelEngine::terminate() {
-	glfwTerminate();
-}
 
-GLFWwindow* PixelEngine::getWindow() {
-	return currentWindow;
-}
-
-int PixelEngine::initializeEngine() {
-	return glfwInit();
-}
-
-void PixelEngine::swapBufferOrFlush() {
-	if(vsyncEnabled)
-		glfwSwapBuffers(this->getWindow());
-	else 
-		glFlush();
-}
-
+//--------------GLFW Functions--------------//
 GLFWwindow* PixelEngine::createBorderlessFullscreenWindow(GLFWmonitor* monitor, bool vsync) {
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -63,10 +46,42 @@ GLFWwindow* PixelEngine::createBorderlessFullscreenWindow(GLFWmonitor* monitor, 
 	return window;
 }
 
+void PixelEngine::swapBufferOrFlush() {
+	if (vsyncEnabled)
+		glfwSwapBuffers(this->getWindow());
+	else
+		glFlush();
+}
+
+int PixelEngine::initializeEngine() {
+	return glfwInit();
+}
+
+void PixelEngine::terminate() {
+	glfwTerminate();
+}
+
 int PixelEngine::shouldTerminate(GLFWwindow* window) {
 	return glfwWindowShouldClose(window);
 }
 
+void PixelEngine::setGLFWContext() {
+	glfwMakeContextCurrent(currentWindow);
+	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
+}
+//-------------END GLFW FUNCTIONS-----------------//
+
+
+//----------------OPENGL FUNCTIONS------------------//
+void PixelEngine::initializeOpenGLViewport() {
+	glViewport(0, 0, this->getWidth(), this->getHeight());
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+//----------------END OPENGL FUNCTIONS--------------//
+
+
+//--------------WINDOW FUNCTIONS------------------//
 float PixelEngine::getHeight() {
 	return currentWindowHeight;
 }
@@ -75,6 +90,13 @@ float PixelEngine::getWidth() {
 	return currentWindowWidth;
 }
 
+GLFWwindow* PixelEngine::getWindow() {
+	return currentWindow;
+}
+//----------------END WINDOW FUNCTIONS----------------//
+
+
+//----------------RENDERING FUNCTIONS------------------//
 void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 	//Count the average fps over n frames
 	fpsTotalTime += deltaTime;
@@ -90,10 +112,6 @@ void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 	}
 }
 
-Transform* PixelEngine::getWorldOrigin() {
-	return &(this->worldOrigin);
-}
-
 void PixelEngine::renderObjects(SpriteRenderer* renderer) {
 	for (auto& g : this->gameObjects) {
 		if (!g->shouldDelete())
@@ -103,7 +121,10 @@ void PixelEngine::renderObjects(SpriteRenderer* renderer) {
 									//At the same time, we can remove stale registered actions
 	}
 }
+//---------------END RENDERING FUNCTIONS--------------//
 
+
+//---------------GameObject MANAGEMENT FUNCTIONS------------///
 void PixelEngine::deleteMarkedObjects() {
 	if (needRunDeletion) {
 		this->gameObjects.erase(std::remove_if(this->gameObjects.begin(), this->gameObjects.end(), [&](std::unique_ptr<GameObject> & obj) {
@@ -116,22 +137,14 @@ void PixelEngine::deleteMarkedObjects() {
 		return;
 	}
 }
+//-------------END GameObject MANAGEMENT FUNCTIONS-------------//
 
-void PixelEngine::setGLFWContext() {
-	glfwMakeContextCurrent(currentWindow);
-	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
-}
 
+//-------------USER INPUT FUNCTIONS---------------//
 void PixelEngine::setKeyboardAndMouseCallbacks() {
 	keyboardHandler->setCallback(currentWindow);
 	mouseHandler->setMouseButtonCallback(currentWindow);
 	mouseHandler->setPositionCallback(currentWindow);
-}
-
-void PixelEngine::initializeOpenGLViewport() {
-	glViewport(0, 0, this->getWidth(), this->getHeight());
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void PixelEngine::registerMouseAction(int button, std::function<void(double)> action) {
@@ -146,7 +159,10 @@ void PixelEngine::handleKeyboardAndMouseInput(double deltaTime) {
 	mouseHandler->handleInput(deltaTime);
 	keyboardHandler->handleInput(deltaTime);
 }
+//----------------END USER INPUT FUNCTIONS----------------//
 
+
+//----------------TRANSFORM FUNCTIONS------------------//
 Position PixelEngine::getMousePosition() {
 	return Position(mouseHandler->xpos, mouseHandler->ypos);
 }
@@ -158,3 +174,8 @@ void PixelEngine::addTransformToOrigin(Transform offset) {
 Position PixelEngine::getMouseMovement() {
 	return mouseHandler->getDeltaMouseMovement();
 }
+
+Transform* PixelEngine::getWorldOrigin() {
+	return &(this->worldOrigin);
+}
+//---------------END TRANSFORM FUNCTIONS------------------//
