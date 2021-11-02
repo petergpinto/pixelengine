@@ -105,10 +105,7 @@ int RenderTest() {
 }
 
 void createSpriteOnCursor(double deltaTime) {
-	Texture2D face = ResourceManager::GetTexture("face");
-	Renderer->DrawSprite(face,
-		glm::vec2(MouseHandler::xpos, MouseHandler::ypos), glm::vec2(100.0f, 100.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	std::cout << MouseHandler::xpos << " " << MouseHandler::ypos << std::endl;
+	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), Position(), engine->getMousePosition(), Size(100.0f, 100.0f))));
 }
 
 void shutdown(double deltaTime) {
