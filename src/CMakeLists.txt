@@ -20,7 +20,7 @@ target_sources(PixelEngine PRIVATE "texture/SpriteRenderer.cpp")
 target_sources(PixelEngine PRIVATE "input/KeyboardHandler.cpp")
 target_sources(PixelEngine PRIVATE "input/MouseHandler.cpp")
 target_sources(PixelEngine PRIVATE "GameObject.cpp")
-target_sources(PixelEngine PRIVATE "Player.cpp")
+target_sources(PixelEngine PRIVATE "texture/CellRenderer.cpp")
 
 #Debug
 target_sources(PixelEngine PRIVATE "RenderTest.cpp")
@@ -35,5 +35,6 @@ target_link_libraries(PixelEngine glfw)
 find_package(OpenGL REQUIRED)
 
 target_link_libraries(PixelEngine OpenGL::GL)
+
 
 # TODO: Add tests and install targets if needed.
