@@ -112,10 +112,12 @@ void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 	}
 }
 
-void PixelEngine::renderObjects(SpriteRenderer* renderer) {
+void PixelEngine::renderObjects(double deltaTime) {
 	for (auto& g : this->gameObjects) {
-		if (!g->shouldDelete())
-			g->Render(renderer);
+		if (!g->shouldDelete()) {
+			g->Render();
+			g->tick(deltaTime);
+		}
 		else
 			needRunDeletion = true; //check if there are objects that need deletion here and only run deleteMarkedObjects if there is at least 1
 									//At the same time, we can remove stale registered actions

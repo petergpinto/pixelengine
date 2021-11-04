@@ -6,10 +6,10 @@
 class Cell : public GameObject {
 
 public:
-	Cell(Transform*, Position);
+	Cell(CellRenderer*, Transform*, Position);
 	~Cell();
 	void tick(double);
-	void Render(CellRenderer*);
+	void Render();
 
 private:
 	Position pos;

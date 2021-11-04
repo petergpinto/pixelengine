@@ -44,7 +44,7 @@ void CellRenderer::SetProjectionMatrix(glm::mat4 matrix) {
 	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, false, glm::value_ptr(matrix));
 }
 
-void CellRenderer::DrawCell(glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color, float aspectRatio)
+void CellRenderer::Draw(Texture2D &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color, float aspectRatio)
 {
 
 	// prepare transformations

@@ -4,7 +4,7 @@
 
 class Player : public GameObject {
 public:
-	Player(Texture2D, Transform*);
+	Player(SpriteRenderer*, Texture2D, Transform*);
 	void moveLeft(double);
 	void moveRight(double);
 	void moveUp(double);

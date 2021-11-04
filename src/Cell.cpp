@@ -1,6 +1,7 @@
 #include "Cell.h"
+#include <iostream>
 
-Cell::Cell(Transform* anchorPoint, Position p) : GameObject(Texture2D(), anchorPoint, Transform(p, Size(), Rotation()) ) {
+Cell::Cell(CellRenderer* rend, Transform* anchorPoint, Position p) : GameObject(rend, Texture2D(), anchorPoint, Transform(p, Size(), Rotation()) ) {
 	pos = p;
 }
 
@@ -9,9 +10,9 @@ Cell::~Cell() {
 }
 
 void Cell::tick(double deltaTime) {
-	pos.y -= 1 * deltaTime;
+	pos.y += 100 * deltaTime;
 }
 
-void Cell::Render(CellRenderer* renderer) {
-	renderer->DrawCell(glm::vec2(pos.x, pos.y), glm::vec2(1, 1));
+void Cell::Render() {
+	renderer->Draw(Texture2D(), glm::vec2(this->anchorPoint->pos.x + pos.x, this->anchorPoint->pos.y + pos.y), glm::vec2(1, 1),0.0f,glm::vec3(0,0,1));
 }

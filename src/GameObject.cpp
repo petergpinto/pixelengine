@@ -1,15 +1,16 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Texture2D objectTexture, Transform* anchorPoint, Transform objectTransform) {
+GameObject::GameObject(Renderer* rend, Texture2D objectTexture, Transform* anchorPoint, Transform objectTransform) {
 	this->activeTexture = objectTexture;
 	this->localTransform = objectTransform;
 	this->anchorPoint = anchorPoint;
 	markedForDeletion = false;
+	renderer = rend;
 }
 
 //Render functions
-void GameObject::Render(SpriteRenderer* renderer) {
-	renderer->DrawSprite(this->activeTexture, 
+void GameObject::Render() {
+	renderer->Draw(this->activeTexture, 
 		glm::vec2(this->anchorPoint->pos.x + this->localTransform.pos.x, this->anchorPoint->pos.y+this->localTransform.pos.y), 
 		glm::vec2(this->localTransform.size.x, this->localTransform.size.y),
 		0.0f, 
@@ -52,13 +53,13 @@ bool GameObject::shouldDelete() {
 }
 
 
-AnimatedGameObject::AnimatedGameObject(std::vector<Texture2D> animationSet, Transform* anchorPoint) : GameObject(animationSet.at(0), anchorPoint) {
+AnimatedGameObject::AnimatedGameObject(SpriteRenderer* rend, std::vector<Texture2D> animationSet, Transform* anchorPoint) : GameObject(rend, animationSet.at(0), anchorPoint) {
 	this->currentAnimationTextureIndex = 0;
 	this->animationTextureSet = animationSet;
 }
 
-void AnimatedGameObject::Render(SpriteRenderer* renderer) {
+void AnimatedGameObject::Render() {
 	this->activeTexture = this->animationTextureSet.at(this->currentAnimationTextureIndex);
 	this->currentAnimationTextureIndex++;
-	GameObject::Render(renderer);
+	GameObject::Render();
 }

@@ -6,15 +6,18 @@
 #include "texture.h"
 #include "SpriteRenderer.h"
 #include "transform.h"
+#include "Renderer.h"
 
 
 class GameObject {
 public:
-	GameObject(Texture2D, Transform* anchorPoint, Transform objectTransform = Transform());
+	GameObject(Renderer* rend, Texture2D, Transform* anchorPoint, Transform objectTransform = Transform());
 	virtual ~GameObject() = default;
 
+	virtual void tick(double) {};
+
 	//Render functions
-	void Render(SpriteRenderer*);
+	virtual void Render();
 	bool isObjectVisible();
 	void setObjectVisible(bool);
 
@@ -33,15 +36,15 @@ protected:
 	Texture2D activeTexture;
 	bool drawObject;
 	bool markedForDeletion;
-
+	Renderer* renderer;
 private:
-
+	
 };
 
 class AnimatedGameObject : public GameObject {
 public:
-	AnimatedGameObject(std::vector<Texture2D>, Transform*);
-	void Render(SpriteRenderer*);
+	AnimatedGameObject(SpriteRenderer*, std::vector<Texture2D>, Transform*);
+	void Render();
 private:
 	std::vector<Texture2D> animationTextureSet;
 	int currentAnimationTextureIndex;
