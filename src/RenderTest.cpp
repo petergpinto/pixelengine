@@ -102,7 +102,8 @@ int RenderTest() {
 		engine->handleKeyboardAndMouseInput(deltaTime);
 		
 		//Call Render() on each GameObject, except if it is marked for deletion
-		engine->renderObjects(deltaTime);
+		engine->renderObjects();
+		engine->tickObjects(deltaTime);
 		//Delete objects marked for deletion
 		engine->deleteMarkedObjects();
 
