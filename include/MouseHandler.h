@@ -5,6 +5,7 @@
 #include <functional>
 #include <vector>
 #include "GameObject.h"
+#include "transform.h"
 
 #define NUM_MOUSE_BUTTONS 8 
 
@@ -18,6 +19,7 @@ private:
 
 public:
 	static double xpos, ypos;
+	double previousXpos = 0, previousYpos = 0;
 	static bool mouseButtonsPressed[NUM_MOUSE_BUTTONS];
 	MouseHandler();
 	void setPositionCallback(GLFWwindow*);
@@ -26,4 +28,5 @@ public:
 	void registerAction(int, std::function<void(double)>);
 	void pollMouseEvents();
 	void setCursorMode(int);
+	Position getDeltaMouseMovement();
 };

@@ -19,6 +19,9 @@
 #include "GameObject.h"
 #include "MouseHandler.h"
 #include "KeyboardHandler.h"
+#include "transform.h"
+#include "CellRenderer.h"
+#include "Cell.h"
 
 
 enum ERROR {
@@ -37,6 +40,7 @@ private:
 	Transform worldOrigin;
 	KeyboardHandler* keyboardHandler;
 	MouseHandler* mouseHandler;
+	bool needRunDeletion = false;
 
 	//FPS counter vars
 	double fps, fpsTotalTime = 0.0f;
@@ -54,8 +58,9 @@ public:
 	float getHeight();
 	void fpsCounter(double, int, bool debugPrint = false);
 	void swapBufferOrFlush();
-	Transform getWorldOrigin();
-	void renderObjects(SpriteRenderer*);
+	Transform* getWorldOrigin();
+	void addTransformToOrigin(Transform);
+	void renderObjects(double deltaTime);
 	void deleteMarkedObjects();
 	void setGLFWContext();
 	void setKeyboardAndMouseCallbacks();
@@ -63,6 +68,8 @@ public:
 	void registerMouseAction(int, std::function<void(double)>);
 	void registerKeyboardAction(int, std::function<void(double)>);
 	void handleKeyboardAndMouseInput(double);
+	Position getMousePosition();
+	Position getMouseMovement();
 
 	static int initializeEngine();
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);

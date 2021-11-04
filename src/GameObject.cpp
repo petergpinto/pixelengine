@@ -1,20 +1,17 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Texture2D objectTexture, Position anchorPoint, Position pos, Size size) {
+GameObject::GameObject(Renderer* rend, Texture2D objectTexture, Transform* anchorPoint, Transform objectTransform) {
 	this->activeTexture = objectTexture;
-	this->localTransform = Transform(pos,size);
-	this->anchorPoint = Transform(anchorPoint, Size(), Rotation());
+	this->localTransform = objectTransform;
+	this->anchorPoint = anchorPoint;
 	markedForDeletion = false;
-}
-
-GameObject::~GameObject() {
-
+	renderer = rend;
 }
 
 //Render functions
-void GameObject::Render(SpriteRenderer* renderer) {
-	renderer->DrawSprite(this->activeTexture, 
-		glm::vec2(this->anchorPoint.pos.x+this->localTransform.pos.x, this->anchorPoint.pos.y+this->localTransform.pos.y), 
+void GameObject::Render() {
+	renderer->Draw(this->activeTexture, 
+		glm::vec2(this->anchorPoint->pos.x + this->localTransform.pos.x, this->anchorPoint->pos.y+this->localTransform.pos.y), 
 		glm::vec2(this->localTransform.size.x, this->localTransform.size.y),
 		0.0f, 
 		glm::vec3(1.0f, 1.0f, 1.0f), 
@@ -31,11 +28,11 @@ void GameObject::setObjectVisible(bool objectVisible) {
 }
 
 //Position functions
-Transform GameObject::getAnchorPoint() {
-	return this->anchorPoint;
+Transform* GameObject::getAnchorPoint() {
+	return (this->anchorPoint);
 }
 
-void GameObject::setAnchorPoint(Position newAnchorPoint) {
+void GameObject::setAnchorPoint(Transform* newAnchorPoint) {
 	this->anchorPoint = newAnchorPoint;
 }
 
@@ -56,13 +53,13 @@ bool GameObject::shouldDelete() {
 }
 
 
-AnimatedGameObject::AnimatedGameObject(std::vector<Texture2D> animationSet) : GameObject(animationSet.at(0)) {
+AnimatedGameObject::AnimatedGameObject(SpriteRenderer* rend, std::vector<Texture2D> animationSet, Transform* anchorPoint) : GameObject(rend, animationSet.at(0), anchorPoint) {
 	this->currentAnimationTextureIndex = 0;
 	this->animationTextureSet = animationSet;
 }
 
-void AnimatedGameObject::Render(SpriteRenderer* renderer) {
+void AnimatedGameObject::Render() {
 	this->activeTexture = this->animationTextureSet.at(this->currentAnimationTextureIndex);
 	this->currentAnimationTextureIndex++;
-	GameObject::Render(renderer);
+	GameObject::Render();
 }

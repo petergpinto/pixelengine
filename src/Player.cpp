@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(Texture2D tex) : GameObject(tex, Position(), Position(), Size(500.0f, 500.0f)) {
+Player::Player(SpriteRenderer* rend, Texture2D tex, Transform* anchorPoint) : GameObject(rend, tex, anchorPoint, Transform(Position(), Size(500.0f, 500.0f), Rotation())) {
 
 }
 void Player::moveLeft(double deltaTime) {

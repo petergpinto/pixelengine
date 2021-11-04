@@ -6,15 +6,19 @@
 #include "MouseHandler.h"
 #include "GameObject.h"
 #include "Player.h"
+#include "CellRenderer.h"
+#include "Cell.h"
 #include <algorithm>
 #include <memory>
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
 PixelEngine* engine;
-SpriteRenderer  *Renderer;
+SpriteRenderer  *renderer;
+CellRenderer* cellrenderer;
 void shutdown(double);
 void createSpriteOnCursor(double);
+void dragWorld(double);
 
 int keyPressed = 0;
 
@@ -38,13 +42,17 @@ int RenderTest() {
 	engine->initializeOpenGLViewport();
 
 	ResourceManager::LoadShader("../resources/shaders/sprite.vs", "../resources/shaders/sprite.frag", nullptr, "sprite");
+	ResourceManager::LoadShader("../resources/shaders/cell.vs", "../resources/shaders/cell.frag", nullptr, "cell");
 
 	glm::mat4 projection = glm::ortho<float>(0.0f, static_cast<float>(engine->getWidth()), static_cast<float>(engine->getHeight()), 0.0f, -1.0f, 1.0f);
 	ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
 
 	Shader sprite = ResourceManager::GetShader("sprite");
-	Renderer = new SpriteRenderer(sprite);
+	Shader cell = ResourceManager::GetShader("cell");
+	renderer = new SpriteRenderer(sprite);
+	cellrenderer = new CellRenderer(cell);
+	cellrenderer->SetProjectionMatrix(projection);
 
 	ResourceManager::LoadTexture("../resources/textures/awesomeface2.png", true, "face");
 	ResourceManager::LoadTexture("../resources/textures/awesomeface.png", true, "faceHighRes");
@@ -57,13 +65,18 @@ int RenderTest() {
 	yPos = static_cast<float>(engine->getHeight() / 2);
 	rotation = 0.0f;
 
-	engine->gameObjects.push_back(std::make_unique<GameObject> (GameObject(ResourceManager::GetTexture("faceHighRes"))));
-	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("faceHighRes"),
-		Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)), 
-		Position(), 
-		Size(100.0f, 100.0f))));
-	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("test"), Position(), Position(), Size(500.0f,500.0f))));
-	Player player = Player(ResourceManager::GetTexture("face"));
+	engine->gameObjects.push_back(std::make_unique<GameObject> (GameObject(renderer, ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin())));
+	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(renderer, ResourceManager::GetTexture("faceHighRes"),
+		engine->getWorldOrigin(),
+		Transform(Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)),  Size(100.0f, 100.0f), Rotation())
+	)));
+	engine->gameObjects.push_back(std::make_unique<GameObject>(
+		GameObject(renderer, ResourceManager::GetTexture("test"),
+			engine->getWorldOrigin(), 
+			Transform(Position(), Size(500.0f,500.0f), Rotation())
+		))
+	);
+	Player player = Player(renderer, ResourceManager::GetTexture("face"), engine->getWorldOrigin());
 	std::unique_ptr<Player> p = std::make_unique<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
 	engine->registerKeyboardAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
@@ -87,11 +100,13 @@ int RenderTest() {
 		//std::cout << deltaTime << std::endl;
 		engine->fpsCounter(deltaTime, 100);
 		engine->handleKeyboardAndMouseInput(deltaTime);
-
+		
 		//Call Render() on each GameObject, except if it is marked for deletion
-		engine->renderObjects(Renderer);
+		engine->renderObjects(deltaTime);
 		//Delete objects marked for deletion
 		engine->deleteMarkedObjects();
+
+		//rend->DrawCell(glm::vec2(500.0f, 500.0f), glm::vec2(1, 1));
 
 		/* Swap front and back buffers */
 		engine->swapBufferOrFlush();
@@ -105,10 +120,13 @@ int RenderTest() {
 }
 
 void createSpriteOnCursor(double deltaTime) {
-	Texture2D face = ResourceManager::GetTexture("face");
-	Renderer->DrawSprite(face,
-		glm::vec2(MouseHandler::xpos, MouseHandler::ypos), glm::vec2(100.0f, 100.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-	std::cout << MouseHandler::xpos << " " << MouseHandler::ypos << std::endl;
+	engine->gameObjects.push_back(std::make_unique<Cell>(Cell(cellrenderer, engine->getWorldOrigin(), engine->getMousePosition())));
+	//engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), engine->getWorldOrigin(), Transform(engine->getMousePosition(), Size(100.0f, 100.0f)))));
+}
+
+void dragWorld(double deltaTime) {
+	double magnitude = 100.0f;
+	engine->addTransformToOrigin(Transform(Position(engine->getMouseMovement().x * deltaTime * magnitude, engine->getMouseMovement().y * deltaTime * magnitude)));
 }
 
 void shutdown(double deltaTime) {
