@@ -7,10 +7,6 @@ GameObject::GameObject(Texture2D objectTexture, Transform* anchorPoint, Transfor
 	markedForDeletion = false;
 }
 
-GameObject::~GameObject() {
-
-}
-
 //Render functions
 void GameObject::Render(SpriteRenderer* renderer) {
 	renderer->DrawSprite(this->activeTexture, 

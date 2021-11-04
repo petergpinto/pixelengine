@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "CellRenderer.h"
+#include "Cell.h"
 #include <algorithm>
 #include <memory>
 
@@ -35,7 +36,7 @@ int RenderTest() {
 	engine->setKeyboardAndMouseCallbacks();
 
 	engine->registerKeyboardAction(GLFW_KEY_ESCAPE, std::bind(&shutdown, std::placeholders::_1));
-	engine->registerMouseAction(GLFW_MOUSE_BUTTON_LEFT, std::bind(&dragWorld, std::placeholders::_1));
+	engine->registerMouseAction(GLFW_MOUSE_BUTTON_LEFT, std::bind(&createSpriteOnCursor, std::placeholders::_1));
 
 	engine->initializeOpenGLViewport();
 
@@ -83,7 +84,7 @@ int RenderTest() {
 	engine->registerKeyboardAction(GLFW_KEY_S, std::bind(&Player::moveDown, p.get(), std::placeholders::_1));
 	engine->registerKeyboardAction(GLFW_KEY_U, std::bind(&Player::destroy, p.get(), std::placeholders::_1));
 
-	engine->gameObjects.push_back(std::move(p));
+	//engine->gameObjects.push_back(std::move(p));
 
 	/* Loop until the user closes the window */
 	while (!PixelEngine::shouldTerminate(engine->getWindow()))
@@ -98,13 +99,13 @@ int RenderTest() {
 		//std::cout << deltaTime << std::endl;
 		engine->fpsCounter(deltaTime, 100);
 		engine->handleKeyboardAndMouseInput(deltaTime);
-
+		
 		//Call Render() on each GameObject, except if it is marked for deletion
 		engine->renderObjects(Renderer);
 		//Delete objects marked for deletion
 		engine->deleteMarkedObjects();
 
-		rend->DrawCell(glm::vec2(500.0f, 500.0f), glm::vec2(1.0f, 1.0f));
+		//rend->DrawCell(glm::vec2(500.0f, 500.0f), glm::vec2(1, 1));
 
 		/* Swap front and back buffers */
 		engine->swapBufferOrFlush();
@@ -118,7 +119,8 @@ int RenderTest() {
 }
 
 void createSpriteOnCursor(double deltaTime) {
-	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), engine->getWorldOrigin(), Transform(engine->getMousePosition(), Size(100.0f, 100.0f)))));
+	engine->gameObjects.push_back(std::make_unique<GameObject>(Cell(engine->getWorldOrigin(), engine->getMousePosition())));
+	//engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), engine->getWorldOrigin(), Transform(engine->getMousePosition(), Size(100.0f, 100.0f)))));
 }
 
 void dragWorld(double deltaTime) {

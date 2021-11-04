@@ -11,7 +11,7 @@
 class GameObject {
 public:
 	GameObject(Texture2D, Transform* anchorPoint, Transform objectTransform = Transform());
-	~GameObject();
+	virtual ~GameObject() = default;
 
 	//Render functions
 	void Render(SpriteRenderer*);

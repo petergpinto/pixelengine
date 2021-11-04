@@ -20,6 +20,8 @@
 #include "MouseHandler.h"
 #include "KeyboardHandler.h"
 #include "transform.h"
+#include "CellRenderer.h"
+#include "Cell.h"
 
 
 enum ERROR {
