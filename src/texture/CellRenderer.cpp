@@ -39,6 +39,11 @@ void CellRenderer::initRenderData()
 	glBindVertexArray(0);
 }
 
+void CellRenderer::SetProjectionMatrix(glm::mat4 matrix) {
+	shader.Use();
+	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, false, glm::value_ptr(matrix));
+}
+
 void CellRenderer::DrawCell(glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color, float aspectRatio)
 {
 
@@ -58,7 +63,8 @@ void CellRenderer::DrawCell(glm::vec2 position, glm::vec2 size, float rotate, gl
 	// render textured quad
 
 	this->shader.SetVector3f("spriteColor", color);
-	//glBindTexture(GL_TEXTURE_2D, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glBindVertexArray(this->quadVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

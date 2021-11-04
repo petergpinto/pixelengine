@@ -47,9 +47,10 @@ int RenderTest() {
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
 
 	Shader sprite = ResourceManager::GetShader("sprite");
-	//Shader cell = ResourceManager::GetShader("cell");
+	Shader cell = ResourceManager::GetShader("cell");
 	Renderer = new SpriteRenderer(sprite);
-	//CellRenderer* rend = new CellRenderer(cell);
+	CellRenderer* rend = new CellRenderer(cell);
+	rend->SetProjectionMatrix(projection);
 
 	ResourceManager::LoadTexture("../resources/textures/awesomeface2.png", true, "face");
 	ResourceManager::LoadTexture("../resources/textures/awesomeface.png", true, "faceHighRes");
@@ -98,12 +99,12 @@ int RenderTest() {
 		engine->fpsCounter(deltaTime, 100);
 		engine->handleKeyboardAndMouseInput(deltaTime);
 
-		//rend->DrawCell(glm::vec2(500.0f, 500.0f), glm::vec2(100.0f, 100.0f));
-
 		//Call Render() on each GameObject, except if it is marked for deletion
 		engine->renderObjects(Renderer);
 		//Delete objects marked for deletion
 		engine->deleteMarkedObjects();
+
+		rend->DrawCell(glm::vec2(500.0f, 500.0f), glm::vec2(1.0f, 1.0f));
 
 		/* Swap front and back buffers */
 		engine->swapBufferOrFlush();
