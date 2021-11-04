@@ -3,6 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+
 # Add source to this project's executable.
 if(MSVC)
 	add_executable (PixelEngine "main.cpp") # Add WIN32 for release
@@ -37,5 +38,6 @@ find_package(OpenGL REQUIRED)
 
 target_link_libraries(PixelEngine OpenGL::GL)
 
+add_dependencies(PixelEngine copy_resources)
 
 # TODO: Add tests and install targets if needed.
