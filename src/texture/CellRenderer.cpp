@@ -56,7 +56,9 @@ void CellRenderer::DrawCell(glm::vec2 position, glm::vec2 size, float rotate, gl
 	this->shader.SetMatrix4("model", model);
 
 	// render textured quad
+
 	this->shader.SetVector3f("spriteColor", color);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 
 	glBindVertexArray(this->quadVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

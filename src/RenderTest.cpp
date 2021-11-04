@@ -6,6 +6,7 @@
 #include "MouseHandler.h"
 #include "GameObject.h"
 #include "Player.h"
+#include "CellRenderer.h"
 #include <algorithm>
 #include <memory>
 
@@ -39,13 +40,16 @@ int RenderTest() {
 	engine->initializeOpenGLViewport();
 
 	ResourceManager::LoadShader("../resources/shaders/sprite.vs", "../resources/shaders/sprite.frag", nullptr, "sprite");
+	ResourceManager::LoadShader("../resources/shaders/cell.vs", "../resources/shaders/cell.frag", nullptr, "cell");
 
 	glm::mat4 projection = glm::ortho<float>(0.0f, static_cast<float>(engine->getWidth()), static_cast<float>(engine->getHeight()), 0.0f, -1.0f, 1.0f);
 	ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
 
 	Shader sprite = ResourceManager::GetShader("sprite");
+	Shader cell = ResourceManager::GetShader("cell");
 	Renderer = new SpriteRenderer(sprite);
+	CellRenderer* rend = new CellRenderer(cell);
 
 	ResourceManager::LoadTexture("../resources/textures/awesomeface2.png", true, "face");
 	ResourceManager::LoadTexture("../resources/textures/awesomeface.png", true, "faceHighRes");
@@ -93,6 +97,8 @@ int RenderTest() {
 		//std::cout << deltaTime << std::endl;
 		engine->fpsCounter(deltaTime, 100);
 		engine->handleKeyboardAndMouseInput(deltaTime);
+
+		rend->DrawCell(glm::vec2(500.0f, 500.0f), glm::vec2(100.0f, 100.0f));
 
 		//Call Render() on each GameObject, except if it is marked for deletion
 		engine->renderObjects(Renderer);

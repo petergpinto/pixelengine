@@ -29,7 +29,7 @@ void SpriteRenderer::DrawSprite(Texture2D &texture, glm::vec2 position, glm::vec
 	this->shader.SetMatrix4("model", model);
 
 	// render textured quad
-	this->shader.SetVector3f("spriteColor", color);
+	this->shader.SetVector4f("vertexColor", glm::vec4(color, 1.0f));
 
 	glActiveTexture(GL_TEXTURE0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
