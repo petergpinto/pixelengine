@@ -1,9 +1,11 @@
 #version 330 core
+in vec2 TexCoords;
 out vec4 color;
-  
-in vec4 vertexColor; // the input variable from the vertex shader (same name and same type)  
+
+uniform sampler2D image;
+uniform vec3 spriteColor;
 
 void main()
-{
-    color = vertexColor;
-} 
+{    
+    color = vec4(spriteColor, 1.0) * texture(image, TexCoords);
+}  
