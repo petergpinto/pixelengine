@@ -11,3 +11,10 @@ Image sprite loading
 		with many sprites
 
 https://learnopengl.com/In-Practice/2D-Game/Setting-up
+
+http://www.opengl-tutorial.org/
+
+https://stackoverflow.com/questions/42473044/how-to-reduce-draw-calls-in-opengl-webgl
+
+http://voidptr.io/blog/2016/04/28/ldEngine-Part-1.html
+https://github.com/bitnenfer/GLSpriteRenderDemo
