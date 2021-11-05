@@ -60,7 +60,8 @@ public:
 	void swapBufferOrFlush();
 	Transform* getWorldOrigin();
 	void addTransformToOrigin(Transform);
-	void renderObjects(double deltaTime);
+	void renderObjects();
+	void tickObjects(double);
 	void deleteMarkedObjects();
 	void setGLFWContext();
 	void setKeyboardAndMouseCallbacks();

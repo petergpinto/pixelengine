@@ -112,11 +112,10 @@ void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 	}
 }
 
-void PixelEngine::renderObjects(double deltaTime) {
+void PixelEngine::renderObjects() {
 	for (auto& g : this->gameObjects) {
 		if (!g->shouldDelete()) {
 			g->Render();
-			g->tick(deltaTime);
 		}
 		else
 			needRunDeletion = true; //check if there are objects that need deletion here and only run deleteMarkedObjects if there is at least 1
@@ -124,6 +123,8 @@ void PixelEngine::renderObjects(double deltaTime) {
 	}
 }
 //---------------END RENDERING FUNCTIONS--------------//
+
+
 
 
 //---------------GameObject MANAGEMENT FUNCTIONS------------///
@@ -137,6 +138,17 @@ void PixelEngine::deleteMarkedObjects() {
 	}
 	else {
 		return;
+	}
+}
+
+void PixelEngine::tickObjects(double deltaTime) {
+	for (auto& g : this->gameObjects) {
+		if (!g->shouldDelete()) {
+			g->tick(deltaTime);
+		}
+		else
+			needRunDeletion = true; //check if there are objects that need deletion here and only run deleteMarkedObjects if there is at least 1
+									//At the same time, we can remove stale registered actions
 	}
 }
 //-------------END GameObject MANAGEMENT FUNCTIONS-------------//
