@@ -6,23 +6,32 @@
 PixelEngine::PixelEngine(bool vsync, int monitor) {
 	error = ERROR::NONE;
 	vsyncEnabled = vsync;
-	this->worldOrigin = Transform();
-	if (!PixelEngine::initializeEngine())
+	this->worldOrigin = Transform(); //Origin is 0,0, size of 1,1 and rotation of 0
+	if (!PixelEngine::initializeEngine()) //GLFW init
 		error = ERROR::GLFW_INIT;
-	int monitorCount;
-	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+
+	//Get the total number of monitors and store the result in monitorCount
+	int monitorCount; 
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount); 
+
+	//Create the window on the monitor indexed by "monitor"
 	currentWindow = PixelEngine::createBorderlessFullscreenWindow(monitors[monitor], vsync);
+	//If the window creation failed, return an error
+	if (!currentWindow)
+		error = ERROR::GLFW_WINDOW_CREATE;
+
+	//Record information about the window for later
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	currentWindowHeight = mode->height;
 	currentWindowWidth = mode->width;
-	if (!currentWindow)
-		error = ERROR::GLFW_WINDOW_CREATE;
+
+	//Initialize input handler objects
 	mouseHandler = new MouseHandler();
 	keyboardHandler = new KeyboardHandler();
 }
 
 PixelEngine::~PixelEngine() {
-	this->shouldTerminate(currentWindow);
+	glfwTerminate(); //Shutdown GLFW
 }
 
 
