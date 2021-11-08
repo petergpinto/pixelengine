@@ -65,19 +65,19 @@ int RenderTest() {
 	yPos = static_cast<float>(engine->getHeight() / 2);
 	rotation = 0.0f;
 
-	engine->gameObjects.push_back(std::make_unique<GameObject> (GameObject(renderer, ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin())));
-	engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(renderer, ResourceManager::GetTexture("faceHighRes"),
+	engine->gameObjects.push_back(std::make_shared<GameObject> (GameObject(renderer, ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin())));
+	engine->gameObjects.push_back(std::make_shared<GameObject>(GameObject(renderer, ResourceManager::GetTexture("faceHighRes"),
 		engine->getWorldOrigin(),
 		Transform(Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)),  Size(100.0f, 100.0f), Rotation())
 	)));
-	engine->gameObjects.push_back(std::make_unique<GameObject>(
+	engine->gameObjects.push_back(std::make_shared<GameObject>(
 		GameObject(renderer, ResourceManager::GetTexture("test"),
 			engine->getWorldOrigin(), 
 			Transform(Position(), Size(500.0f,500.0f), Rotation())
 		))
 	);
 	Player player = Player(renderer, ResourceManager::GetTexture("face"), engine->getWorldOrigin());
-	std::unique_ptr<Player> p = std::make_unique<Player>(player);
+	std::shared_ptr<Player> p = std::make_shared<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
 	engine->registerKeyboardAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
 	engine->registerKeyboardAction(GLFW_KEY_D, std::bind(&Player::moveRight, p.get(), std::placeholders::_1));
