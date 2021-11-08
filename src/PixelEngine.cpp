@@ -130,7 +130,7 @@ void PixelEngine::renderObjects() {
 //---------------GameObject MANAGEMENT FUNCTIONS------------///
 void PixelEngine::deleteMarkedObjects() {
 	if (needRunDeletion) {
-		this->gameObjects.erase(std::remove_if(this->gameObjects.begin(), this->gameObjects.end(), [&](std::unique_ptr<GameObject> & obj) {
+		this->gameObjects.erase(std::remove_if(this->gameObjects.begin(), this->gameObjects.end(), [&](std::shared_ptr<GameObject> & obj) {
 			return obj->shouldDelete();
 		}), this->gameObjects.end());
 		needRunDeletion = false;

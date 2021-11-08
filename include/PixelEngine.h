@@ -47,7 +47,7 @@ private:
 	int fpsFrameCount = 0;
 
 public:
-	std::vector<std::unique_ptr<GameObject>> gameObjects;
+	std::vector<std::shared_ptr<GameObject>> gameObjects;
 
 	PixelEngine(bool vsync = true, int monitor = 0);
 	~PixelEngine();
