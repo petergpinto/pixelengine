@@ -44,10 +44,12 @@ ERROR PixelEngine::checkError() {
 GLFWwindow* PixelEngine::createBorderlessFullscreenWindow(GLFWmonitor* monitor, bool vsync) {
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
+	//Set window hints, necessary for borderless fullscreen
 	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+	//Set VSync hint only if desired
 	if(!vsync)
 		glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE); //Disable Vsync
 
@@ -84,7 +86,7 @@ void PixelEngine::setGLFWContext() {
 //----------------OPENGL FUNCTIONS------------------//
 void PixelEngine::initializeOpenGLViewport() {
 	glViewport(0, 0, this->getWidth(), this->getHeight());
-	glEnable(GL_BLEND);
+	glEnable(GL_BLEND); //Allows for transparency
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 //----------------END OPENGL FUNCTIONS--------------//
@@ -124,7 +126,7 @@ void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 void PixelEngine::renderObjects() {
 	for (auto& g : this->gameObjects) {
 		if (!g->shouldDelete()) {
-			g->Render();
+			g->Render(); //Use the renderer that is part of the object to draw to the screen
 		}
 		else
 			needRunDeletion = true; //check if there are objects that need deletion here and only run deleteMarkedObjects if there is at least 1
