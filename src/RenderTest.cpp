@@ -36,7 +36,6 @@ int RenderTest() {
 
 	engine->setKeyboardAndMouseCallbacks();
 
-	engine->registerKeyboardAction(GLFW_KEY_ESCAPE, std::bind(&shutdown, std::placeholders::_1));
 	engine->registerMouseAction(GLFW_MOUSE_BUTTON_LEFT, std::bind(&createSpriteOnCursor, std::placeholders::_1));
 
 	engine->initializeOpenGLViewport();
@@ -79,13 +78,17 @@ int RenderTest() {
 	Player player = Player(renderer, ResourceManager::GetTexture("face"), engine->getWorldOrigin());
 	std::shared_ptr<Player> p = std::make_shared<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
-	engine->registerKeyboardAction(GLFW_KEY_A, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1));
-	engine->registerKeyboardAction(GLFW_KEY_D, std::bind(&Player::moveRight, p.get(), std::placeholders::_1));
-	engine->registerKeyboardAction(GLFW_KEY_W, std::bind(&Player::moveUp, p.get(), std::placeholders::_1));
-	engine->registerKeyboardAction(GLFW_KEY_S, std::bind(&Player::moveDown, p.get(), std::placeholders::_1));
-	engine->registerKeyboardAction(GLFW_KEY_U, std::bind(&Player::destroy, p.get(), std::placeholders::_1));
+	engine->registerKeyboardAction(GLFW_KEY_A, Action(p, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1)));
+	engine->registerKeyboardAction(GLFW_KEY_D, Action(p, std::bind(&Player::moveRight, p.get(), std::placeholders::_1)));
+	engine->registerKeyboardAction(GLFW_KEY_W, Action(p, std::bind(&Player::moveUp, p.get(), std::placeholders::_1)));
+	engine->registerKeyboardAction(GLFW_KEY_S, Action(p, std::bind(&Player::moveDown, p.get(), std::placeholders::_1)));
+	engine->registerKeyboardAction(GLFW_KEY_U, Action(p, std::bind(&Player::destroy, p.get(), std::placeholders::_1)));
 
 	engine->gameObjects.push_back(std::move(p));
+
+	std::shared_ptr<GameObject> g = std::make_shared<GameObject>(GameObject(renderer, ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin()));
+	engine->registerKeyboardAction(GLFW_KEY_ESCAPE, Action(g, std::bind(&shutdown, std::placeholders::_1)));
+
 
 	/* Loop until the user closes the window */
 	while (!PixelEngine::shouldTerminate(engine->getWindow()))

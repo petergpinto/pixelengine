@@ -22,6 +22,7 @@
 #include "transform.h"
 #include "CellRenderer.h"
 #include "Cell.h"
+#include "Action.h"
 
 
 enum ERROR {
@@ -67,7 +68,7 @@ public:
 	void setKeyboardAndMouseCallbacks();
 	void initializeOpenGLViewport();
 	void registerMouseAction(int, std::function<void(double)>);
-	void registerKeyboardAction(int, std::function<void(double)>);
+	void registerKeyboardAction(int, Action);
 	void handleKeyboardAndMouseInput(double);
 	Position getMousePosition();
 	Position getMouseMovement();

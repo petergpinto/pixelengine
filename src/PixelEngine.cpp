@@ -165,8 +165,8 @@ void PixelEngine::registerMouseAction(int button, std::function<void(double)> ac
 	mouseHandler->registerAction(button, action);
 }
 
-void PixelEngine::registerKeyboardAction(int key, std::function<void(double)> action) {
-	keyboardHandler->registerAction(key, action);
+void PixelEngine::registerKeyboardAction(int key, Action act) {
+	keyboardHandler->registerAction(key, act);
 }
 
 void PixelEngine::handleKeyboardAndMouseInput(double deltaTime) {
