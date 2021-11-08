@@ -48,34 +48,37 @@ private:
 	int fpsFrameCount = 0;
 
 public:
-	std::vector<std::shared_ptr<GameObject>> gameObjects;
+	//Primary owner of all GameObjects, used to render and tick all objects each frame
+	//When a GameObject is removed from here, the object may still exist but will not render \
+	// or tick and be destroyed when the last reference to the object goes out-of-scope
+	std::vector<std::shared_ptr<GameObject>> gameObjects;  
 
 	PixelEngine(bool vsync = true, int monitor = 0);
 	~PixelEngine();
-	ERROR checkError();
-	void terminate();
-	GLFWwindow* getWindow();
-	float getWidth();
-	float getHeight();
-	void fpsCounter(double, int, bool debugPrint = false);
-	void swapBufferOrFlush();
-	Transform* getWorldOrigin();
-	void addTransformToOrigin(Transform);
-	void renderObjects();
-	void tickObjects(double);
-	void deleteMarkedObjects();
-	void setGLFWContext();
-	void setKeyboardAndMouseCallbacks();
-	void initializeOpenGLViewport();
-	void registerMouseAction(int, std::function<void(double)>);
-	void registerKeyboardAction(int, Action);
-	void handleKeyboardAndMouseInput(double);
-	Position getMousePosition();
-	Position getMouseMovement();
+	ERROR checkError();	//Return any openGL or GLFW error
+	void terminate(); //Shutdown the engine
+	GLFWwindow* getWindow(); //Return a pointer to the current window
+	float getWidth(); //Of current window
+	float getHeight(); //Of current window
+	void fpsCounter(double, int, bool debugPrint = false); //Call once per frame to count FPS, will print to console if debugPrint is true
+	void swapBufferOrFlush(); //Call glfwSwapBuffers if VSync is enabled, otherwise glFlush
+	Transform* getWorldOrigin();  //Return a pointer to the origin of the world, useful as an anchor point
+	void addTransformToOrigin(Transform); //Move the origin around
+	void renderObjects(); //Call Render on all GameObjects
+	void tickObjects(double); //Call tick on all GameObjects
+	void deleteMarkedObjects(); //Delete GameObjects objects marked for deletion (maybe no longer necessary with shared_ptr)
+	void setGLFWContext(); //Set glfw context to current window
+	void setKeyboardAndMouseCallbacks(); //instantiate input callbacks
+	void initializeOpenGLViewport(); //setup openGL viewport
+	void registerMouseAction(int, std::function<void(double)>);  //Add an action object to call a function against a GameObject when a mouse button is pressed
+	void registerKeyboardAction(int, Action); //Same as registerMouseAction but for keyboard presses
+	void handleKeyboardAndMouseInput(double);  //Do the function calls setup by registerKeyboardAction and registerMouseAction
+	Position getMousePosition(); //Process and return mouse data
+	Position getMouseMovement(); // --
 
-	static int initializeEngine();
-	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);
-	static int shouldTerminate(GLFWwindow*);
+	static int initializeEngine(); //run GLFW initialization, not dependent on the engine object
+	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);  //Initialize a borderless fullscreen window on the referenced monitor
+	static int shouldTerminate(GLFWwindow*); //Test if the GLFWwindow should terminate according to the GLFW library
 };
 
 // TODO: Reference additional headers your program requires here.
