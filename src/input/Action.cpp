@@ -5,13 +5,16 @@ Action::Action(std::weak_ptr<GameObject> g, std::function<void(double)> f) {
 	this->func = f;
 }
 
-Action::run(double deltaTime) {
+void Action::run(double deltaTime) {
 	if (auto objPtr = this->obj.lock()) {
-		std::function<void(double)> f = std::bind(&func, objPtr.get(), std::placeholders::_1);
-		f(deltaTime);
+		func(deltaTime);
 	}
 	else {
-		this->isAlive = false;
+		this->alive = false;
 	}
 
+}
+
+bool Action::isAlive() {
+	return this->alive;
 }
