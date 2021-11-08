@@ -10,6 +10,7 @@ GameObject::GameObject(Renderer* rend, Texture2D objectTexture, Transform* ancho
 
 //Render functions
 void GameObject::Render() {
+	//Call the renderer, which is a derived Renderer, Draw is a virtual function that is part of Renderer
 	renderer->Draw(this->activeTexture, 
 		glm::vec2(this->anchorPoint->pos.x + this->localTransform.pos.x, this->anchorPoint->pos.y+this->localTransform.pos.y), 
 		glm::vec2(this->localTransform.size.x, this->localTransform.size.y),
