@@ -6,7 +6,7 @@
 PixelEngine::PixelEngine(bool vsync, int monitor) {
 	error = ERROR::NONE;
 	vsyncEnabled = vsync;
-	this->worldOrigin = Transform(); //Origin is 0,0, size of 1,1 and rotation of 0
+	(this->worldOrigin) = std::make_shared<Transform>(Transform()); //Origin is 0,0, size of 1,1 and rotation of 0
 	if (!PixelEngine::initializeEngine()) //GLFW init
 		error = ERROR::GLFW_INIT;
 
@@ -193,14 +193,14 @@ Position PixelEngine::getMousePosition() {
 }
 
 void PixelEngine::addTransformToOrigin(Transform offset) { 
-	this->worldOrigin += offset;
+	*(this->worldOrigin) += offset;
 }
 
 Position PixelEngine::getMouseMovement() {
 	return mouseHandler->getDeltaMouseMovement();
 }
 
-Transform* PixelEngine::getWorldOrigin() {
-	return &(this->worldOrigin);
+std::shared_ptr<Transform> PixelEngine::getWorldOrigin() {
+	return this->worldOrigin;
 }
 //---------------END TRANSFORM FUNCTIONS------------------//

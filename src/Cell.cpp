@@ -1,7 +1,7 @@
 #include "Cell.h"
 #include <iostream>
 
-Cell::Cell(CellRenderer* rend, Transform* anchorPoint, Position p) : GameObject(rend, Texture2D(), anchorPoint, Transform(p, Size(), Rotation()) ) {
+Cell::Cell(CellRenderer* rend, std::shared_ptr<Transform> anchorPoint, Position p) : GameObject(rend, Texture2D(), anchorPoint, Transform(p, Size(), Rotation()) ) {
 	pos = p;
 }
 

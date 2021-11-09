@@ -38,7 +38,7 @@ private:
 	float currentWindowHeight;
 	float currentWindowWidth;
 	bool vsyncEnabled;
-	Transform worldOrigin;
+	std::shared_ptr<Transform> worldOrigin;
 	KeyboardHandler* keyboardHandler;
 	MouseHandler* mouseHandler;
 	bool needRunDeletion = false;
@@ -62,7 +62,7 @@ public:
 	float getHeight(); //Of current window
 	void fpsCounter(double, int, bool debugPrint = false); //Call once per frame to count FPS, will print to console if debugPrint is true
 	void swapBufferOrFlush(); //Call glfwSwapBuffers if VSync is enabled, otherwise glFlush
-	Transform* getWorldOrigin();  //Return a pointer to the origin of the world, useful as an anchor point
+	std::shared_ptr<Transform> getWorldOrigin();  //Return a pointer to the origin of the world, useful as an anchor point
 	void addTransformToOrigin(Transform); //Move the origin around
 	void renderObjects(); //Call Render on all GameObjects
 	void tickObjects(double); //Call tick on all GameObjects
