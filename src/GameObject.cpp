@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Renderer* rend, Texture2D objectTexture, Transform* anchorPoint, Transform objectTransform) {
+GameObject::GameObject(Renderer* rend, Texture2D objectTexture, std::shared_ptr<Transform> anchorPoint, Transform objectTransform) {
 	this->activeTexture = objectTexture;
 	this->localTransform = objectTransform;
 	this->anchorPoint = anchorPoint;
@@ -10,6 +10,7 @@ GameObject::GameObject(Renderer* rend, Texture2D objectTexture, Transform* ancho
 
 //Render functions
 void GameObject::Render() {
+	//Call the renderer, which is a derived Renderer, Draw is a virtual function that is part of Renderer
 	renderer->Draw(this->activeTexture, 
 		glm::vec2(this->anchorPoint->pos.x + this->localTransform.pos.x, this->anchorPoint->pos.y+this->localTransform.pos.y), 
 		glm::vec2(this->localTransform.size.x, this->localTransform.size.y),
@@ -28,11 +29,11 @@ void GameObject::setObjectVisible(bool objectVisible) {
 }
 
 //Position functions
-Transform* GameObject::getAnchorPoint() {
+std::shared_ptr<Transform> GameObject::getAnchorPoint() {
 	return (this->anchorPoint);
 }
 
-void GameObject::setAnchorPoint(Transform* newAnchorPoint) {
+void GameObject::setAnchorPoint(std::shared_ptr<Transform> newAnchorPoint) {
 	this->anchorPoint = newAnchorPoint;
 }
 
@@ -53,7 +54,7 @@ bool GameObject::shouldDelete() {
 }
 
 
-AnimatedGameObject::AnimatedGameObject(SpriteRenderer* rend, std::vector<Texture2D> animationSet, Transform* anchorPoint) : GameObject(rend, animationSet.at(0), anchorPoint) {
+AnimatedGameObject::AnimatedGameObject(SpriteRenderer* rend, std::vector<Texture2D> animationSet, std::shared_ptr<Transform> anchorPoint) : GameObject(rend, animationSet.at(0), anchorPoint) {
 	this->currentAnimationTextureIndex = 0;
 	this->animationTextureSet = animationSet;
 }

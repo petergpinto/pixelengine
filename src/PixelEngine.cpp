@@ -6,23 +6,32 @@
 PixelEngine::PixelEngine(bool vsync, int monitor) {
 	error = ERROR::NONE;
 	vsyncEnabled = vsync;
-	this->worldOrigin = Transform();
-	if (!PixelEngine::initializeEngine())
+	(this->worldOrigin) = std::make_shared<Transform>(Transform()); //Origin is 0,0, size of 1,1 and rotation of 0
+	if (!PixelEngine::initializeEngine()) //GLFW init
 		error = ERROR::GLFW_INIT;
-	int monitorCount;
-	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+
+	//Get the total number of monitors and store the result in monitorCount
+	int monitorCount; 
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount); 
+
+	//Create the window on the monitor indexed by "monitor"
 	currentWindow = PixelEngine::createBorderlessFullscreenWindow(monitors[monitor], vsync);
+	//If the window creation failed, return an error
+	if (!currentWindow)
+		error = ERROR::GLFW_WINDOW_CREATE;
+
+	//Record information about the window for later
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	currentWindowHeight = mode->height;
 	currentWindowWidth = mode->width;
-	if (!currentWindow)
-		error = ERROR::GLFW_WINDOW_CREATE;
+
+	//Initialize input handler objects
 	mouseHandler = new MouseHandler();
 	keyboardHandler = new KeyboardHandler();
 }
 
 PixelEngine::~PixelEngine() {
-	this->shouldTerminate(currentWindow);
+	glfwTerminate(); //Shutdown GLFW
 }
 
 
@@ -35,10 +44,12 @@ ERROR PixelEngine::checkError() {
 GLFWwindow* PixelEngine::createBorderlessFullscreenWindow(GLFWmonitor* monitor, bool vsync) {
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
+	//Set window hints, necessary for borderless fullscreen
 	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+	//Set VSync hint only if desired
 	if(!vsync)
 		glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE); //Disable Vsync
 
@@ -75,7 +86,7 @@ void PixelEngine::setGLFWContext() {
 //----------------OPENGL FUNCTIONS------------------//
 void PixelEngine::initializeOpenGLViewport() {
 	glViewport(0, 0, this->getWidth(), this->getHeight());
-	glEnable(GL_BLEND);
+	glEnable(GL_BLEND); //Allows for transparency
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 //----------------END OPENGL FUNCTIONS--------------//
@@ -115,7 +126,7 @@ void PixelEngine::fpsCounter(double deltaTime, int n, bool debugPrint) {
 void PixelEngine::renderObjects() {
 	for (auto& g : this->gameObjects) {
 		if (!g->shouldDelete()) {
-			g->Render();
+			g->Render(); //Use the renderer that is part of the object to draw to the screen
 		}
 		else
 			needRunDeletion = true; //check if there are objects that need deletion here and only run deleteMarkedObjects if there is at least 1
@@ -130,7 +141,7 @@ void PixelEngine::renderObjects() {
 //---------------GameObject MANAGEMENT FUNCTIONS------------///
 void PixelEngine::deleteMarkedObjects() {
 	if (needRunDeletion) {
-		this->gameObjects.erase(std::remove_if(this->gameObjects.begin(), this->gameObjects.end(), [&](std::unique_ptr<GameObject> & obj) {
+		this->gameObjects.erase(std::remove_if(this->gameObjects.begin(), this->gameObjects.end(), [&](std::shared_ptr<GameObject> & obj) {
 			return obj->shouldDelete();
 		}), this->gameObjects.end());
 		needRunDeletion = false;
@@ -165,8 +176,8 @@ void PixelEngine::registerMouseAction(int button, std::function<void(double)> ac
 	mouseHandler->registerAction(button, action);
 }
 
-void PixelEngine::registerKeyboardAction(int key, std::function<void(double)> action) {
-	keyboardHandler->registerAction(key, action);
+void PixelEngine::registerKeyboardAction(int key, Action act) {
+	keyboardHandler->registerAction(key, act);
 }
 
 void PixelEngine::handleKeyboardAndMouseInput(double deltaTime) {
@@ -182,14 +193,14 @@ Position PixelEngine::getMousePosition() {
 }
 
 void PixelEngine::addTransformToOrigin(Transform offset) { 
-	this->worldOrigin += offset;
+	*(this->worldOrigin) += offset;
 }
 
 Position PixelEngine::getMouseMovement() {
 	return mouseHandler->getDeltaMouseMovement();
 }
 
-Transform* PixelEngine::getWorldOrigin() {
-	return &(this->worldOrigin);
+std::shared_ptr<Transform> PixelEngine::getWorldOrigin() {
+	return this->worldOrigin;
 }
 //---------------END TRANSFORM FUNCTIONS------------------//

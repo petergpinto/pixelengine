@@ -17,15 +17,17 @@ void KeyboardHandler::handleInput(double deltaTime) {
 	for (int i = 0; i < KeyboardHandler::numKeys; i++) {
 		if (KeyboardHandler::keysPressed[i]) {
 			//run key actions
-			for (std::function<void(double)> f : keyActions[i]) {
-				f(deltaTime);
+			for (Action f : keyActions[i]) {
+				if (f.isAlive()) {
+					f.run(deltaTime);
+				}
 			}
 		}
 	}
 }
 
-void KeyboardHandler::registerAction(int key, std::function<void(double)> func) {
-	keyActions[key].push_back(func);  //std::vector<std::function<void(void)>>
+void KeyboardHandler::registerAction(int key, Action act) {
+	keyActions[key].push_back(act);  //std::vector<std::function<void(void)>>
 }
 
 

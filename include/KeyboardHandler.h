@@ -4,14 +4,16 @@
 #include <GLFW/glfw3.h>
 #include <functional>
 #include <vector>
+#include <memory>
 #include "GameObject.h"
+#include "Action.h"
 
 class KeyboardHandler {
 public:
 	const static int numKeys = 1024;
 
 private:
-	std::vector<std::function<void(double)>> keyActions[numKeys];
+	std::vector<Action> keyActions[numKeys];
 
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
@@ -20,5 +22,5 @@ public:
 	KeyboardHandler();
 	void setCallback(GLFWwindow*);
 	void handleInput(double);
-	void registerAction(int, std::function<void(double)>);
+	void registerAction(int, Action);
 };

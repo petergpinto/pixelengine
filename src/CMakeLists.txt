@@ -24,6 +24,7 @@ target_sources(PixelEngine PRIVATE "GameObject.cpp")
 target_sources(PixelEngine PRIVATE "Player.cpp")
 target_sources(PixelEngine PRIVATE "texture/CellRenderer.cpp")
 target_sources(PixelEngine PRIVATE "Cell.cpp")
+target_sources(PixelEngine PRIVATE "input/Action.cpp")
 
 #Debug
 target_sources(PixelEngine PRIVATE "RenderTest.cpp")
