@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 #include "GameObject.h"
 
 //An Action is a class which contains a weak_ptr to a GameObject and attempts to call a function on it

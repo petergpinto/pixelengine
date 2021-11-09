@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <functional>
 #include <vector>
+#include <memory>
 #include "GameObject.h"
 #include "Action.h"
 

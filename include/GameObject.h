@@ -3,6 +3,7 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <vector>
+#include <memory>
 #include "texture.h"
 #include "SpriteRenderer.h"
 #include "transform.h"
