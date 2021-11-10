@@ -13,9 +13,9 @@
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 float xPos, yPos, deltaTime, rotation;
-PixelEngine* engine;
-SpriteRenderer  *renderer;
-CellRenderer* cellrenderer;
+std::unique_ptr<PixelEngine> engine;
+std::shared_ptr<SpriteRenderer>  renderer;
+std::shared_ptr<CellRenderer> cellrenderer;
 void shutdown(double);
 void createSpriteOnCursor(double);
 void dragWorld(double);
@@ -24,7 +24,7 @@ int keyPressed = 0;
 
 int RenderTest() {
 	/* Initialize the library */
-	engine = new PixelEngine(false);
+	engine = std::unique_ptr<PixelEngine>(new PixelEngine(false)); //std::make_unique causes assertion error if used here (wonder why?)
 
 	if (engine->checkError() != ERROR::NONE) {
 		engine->terminate();
@@ -49,8 +49,8 @@ int RenderTest() {
 
 	Shader sprite = ResourceManager::GetShader("sprite");
 	Shader cell = ResourceManager::GetShader("cell");
-	renderer = new SpriteRenderer(sprite);
-	cellrenderer = new CellRenderer(cell);
+	renderer = std::shared_ptr<SpriteRenderer>(new SpriteRenderer(sprite));
+	cellrenderer = std::shared_ptr<CellRenderer>(new CellRenderer(cell));
 	cellrenderer->SetProjectionMatrix(projection);
 
 	ResourceManager::LoadTexture("../resources/textures/awesomeface2.png", true, "face");
@@ -64,18 +64,18 @@ int RenderTest() {
 	yPos = static_cast<float>(engine->getHeight() / 2);
 	rotation = 0.0f;
 
-	engine->gameObjects.push_back(std::make_shared<GameObject> (GameObject(renderer, ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin())));
-	engine->gameObjects.push_back(std::make_shared<GameObject>(GameObject(renderer, ResourceManager::GetTexture("faceHighRes"),
+	engine->gameObjects.push_back(std::make_shared<GameObject> (GameObject(renderer.get(), ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin())));
+	engine->gameObjects.push_back(std::make_shared<GameObject>(GameObject(renderer.get(), ResourceManager::GetTexture("faceHighRes"),
 		engine->getWorldOrigin(),
 		Transform(Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)),  Size(100.0f, 100.0f), Rotation())
 	)));
 	engine->gameObjects.push_back(std::make_shared<GameObject>(
-		GameObject(renderer, ResourceManager::GetTexture("test"),
+		GameObject(renderer.get(), ResourceManager::GetTexture("test"),
 			engine->getWorldOrigin(), 
 			Transform(Position(), Size(500.0f,500.0f), Rotation())
 		))
 	);
-	Player player = Player(renderer, ResourceManager::GetTexture("face"), engine->getWorldOrigin());
+	Player player = Player(renderer.get(), ResourceManager::GetTexture("face"), engine->getWorldOrigin());
 	std::shared_ptr<Player> p = std::make_shared<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
 	engine->registerKeyboardAction(GLFW_KEY_A, Action(p, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1)));
@@ -86,7 +86,7 @@ int RenderTest() {
 
 	engine->gameObjects.push_back(std::move(p));
 
-	std::shared_ptr<GameObject> g = std::make_shared<GameObject>(GameObject(renderer, ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin()));
+	std::shared_ptr<GameObject> g = std::make_shared<GameObject>(GameObject(renderer.get(), ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin()));
 	engine->registerKeyboardAction(GLFW_KEY_ESCAPE, Action(g, std::bind(&shutdown, std::placeholders::_1)));
 
 
@@ -124,7 +124,7 @@ int RenderTest() {
 }
 
 void createSpriteOnCursor(double deltaTime) {
-	engine->gameObjects.push_back(std::make_unique<Cell>(Cell(cellrenderer, engine->getWorldOrigin(), engine->getMousePosition())));
+	engine->gameObjects.push_back(std::make_unique<Cell>(Cell(cellrenderer.get(), engine->getWorldOrigin(), engine->getMousePosition())));
 	//engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), engine->getWorldOrigin(), Transform(engine->getMousePosition(), Size(100.0f, 100.0f)))));
 }
 
@@ -134,7 +134,7 @@ void dragWorld(double deltaTime) {
 }
 
 void shutdown(double deltaTime) {
-	delete engine;
+	engine->terminate();
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
