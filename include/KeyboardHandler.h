@@ -14,13 +14,14 @@ public:
 
 private:
 	std::vector<Action> keyActions[numKeys];
+	std::shared_ptr<GLFWwindow> callbackWindow;
 
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 public:
 	static bool keysPressed[numKeys];
 	KeyboardHandler();
-	void setCallback(GLFWwindow*);
+	void setCallback(std::shared_ptr<GLFWwindow>);
 	void handleInput(double);
 	void registerAction(int, Action);
 };

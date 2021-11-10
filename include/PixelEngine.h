@@ -33,7 +33,7 @@ enum ERROR {
 
 class PixelEngine {
 private:
-	GLFWwindow* currentWindow;
+	std::shared_ptr<GLFWwindow> currentWindow;
 	ERROR error;
 	float currentWindowHeight;
 	float currentWindowWidth;
@@ -57,7 +57,7 @@ public:
 	~PixelEngine();
 	ERROR checkError();	//Return any openGL or GLFW error
 	void terminate(); //Shutdown the engine
-	GLFWwindow* getWindow(); //Return a pointer to the current window
+	std::shared_ptr<GLFWwindow> getWindow(); //Return a pointer to the current window
 	float getWidth(); //Of current window
 	float getHeight(); //Of current window
 	void fpsCounter(double, int, bool debugPrint = false); //Call once per frame to count FPS, will print to console if debugPrint is true
@@ -78,7 +78,7 @@ public:
 
 	static int initializeEngine(); //run GLFW initialization, not dependent on the engine object
 	static GLFWwindow* createBorderlessFullscreenWindow(GLFWmonitor*, bool vsync = true);  //Initialize a borderless fullscreen window on the referenced monitor
-	static int shouldTerminate(GLFWwindow*); //Test if the GLFWwindow should terminate according to the GLFW library
+	static int shouldTerminate(std::shared_ptr<GLFWwindow>); //Test if the GLFWwindow should terminate according to the GLFW library
 };
 
 // TODO: Reference additional headers your program requires here.

@@ -9,8 +9,9 @@ KeyboardHandler::KeyboardHandler() {
 	}
 }
 
-void KeyboardHandler::setCallback(GLFWwindow* window) {
-	glfwSetKeyCallback(window, key_callback);
+void KeyboardHandler::setCallback(std::shared_ptr<GLFWwindow> window) {
+	callbackWindow = window;
+	glfwSetKeyCallback(callbackWindow.get(), key_callback);
 }
 
 void KeyboardHandler::handleInput(double deltaTime) {
