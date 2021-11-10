@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Renderer* rend, Texture2D objectTexture, std::shared_ptr<Transform> anchorPoint, Transform objectTransform) {
+GameObject::GameObject(std::shared_ptr<Renderer> rend, Texture2D objectTexture, std::shared_ptr<Transform> anchorPoint, Transform objectTransform) {
 	this->activeTexture = objectTexture;
 	this->localTransform = objectTransform;
 	this->anchorPoint = anchorPoint;
@@ -54,7 +54,7 @@ bool GameObject::shouldDelete() {
 }
 
 
-AnimatedGameObject::AnimatedGameObject(SpriteRenderer* rend, std::vector<Texture2D> animationSet, std::shared_ptr<Transform> anchorPoint) : GameObject(rend, animationSet.at(0), anchorPoint) {
+AnimatedGameObject::AnimatedGameObject(std::shared_ptr<SpriteRenderer> rend, std::vector<Texture2D> animationSet, std::shared_ptr<Transform> anchorPoint) : GameObject(rend, animationSet.at(0), anchorPoint) {
 	this->currentAnimationTextureIndex = 0;
 	this->animationTextureSet = animationSet;
 }

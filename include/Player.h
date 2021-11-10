@@ -4,7 +4,7 @@
 
 class Player : public GameObject {
 public:
-	Player(SpriteRenderer*, Texture2D, std::shared_ptr<Transform>);
+	Player(std::shared_ptr<SpriteRenderer>, Texture2D, std::shared_ptr<Transform>);
 	void moveLeft(double);
 	void moveRight(double);
 	void moveUp(double);

@@ -64,18 +64,18 @@ int RenderTest() {
 	yPos = static_cast<float>(engine->getHeight() / 2);
 	rotation = 0.0f;
 
-	engine->gameObjects.push_back(std::make_shared<GameObject> (GameObject(renderer.get(), ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin())));
-	engine->gameObjects.push_back(std::make_shared<GameObject>(GameObject(renderer.get(), ResourceManager::GetTexture("faceHighRes"),
+	engine->gameObjects.push_back(std::make_shared<GameObject> (GameObject(renderer, ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin())));
+	engine->gameObjects.push_back(std::make_shared<GameObject>(GameObject(renderer, ResourceManager::GetTexture("faceHighRes"),
 		engine->getWorldOrigin(),
 		Transform(Position(static_cast<float>(engine->getWidth() / 2), static_cast<float>(engine->getHeight() / 2)),  Size(100.0f, 100.0f), Rotation())
 	)));
 	engine->gameObjects.push_back(std::make_shared<GameObject>(
-		GameObject(renderer.get(), ResourceManager::GetTexture("test"),
+		GameObject(renderer, ResourceManager::GetTexture("test"),
 			engine->getWorldOrigin(), 
 			Transform(Position(), Size(500.0f,500.0f), Rotation())
 		))
 	);
-	Player player = Player(renderer.get(), ResourceManager::GetTexture("face"), engine->getWorldOrigin());
+	Player player = Player(renderer, ResourceManager::GetTexture("face"), engine->getWorldOrigin());
 	std::shared_ptr<Player> p = std::make_shared<Player>(player);
 	//Binds the function Player::moveLeft running on the object instance "player" to the A key, following functions do similar
 	engine->registerKeyboardAction(GLFW_KEY_A, Action(p, std::bind(&Player::moveLeft, p.get(), std::placeholders::_1)));
@@ -86,7 +86,7 @@ int RenderTest() {
 
 	engine->gameObjects.push_back(std::move(p));
 
-	std::shared_ptr<GameObject> g = std::make_shared<GameObject>(GameObject(renderer.get(), ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin()));
+	std::shared_ptr<GameObject> g = std::make_shared<GameObject>(GameObject(renderer, ResourceManager::GetTexture("faceHighRes"), engine->getWorldOrigin()));
 	engine->registerKeyboardAction(GLFW_KEY_ESCAPE, Action(g, std::bind(&shutdown, std::placeholders::_1)));
 
 
@@ -124,7 +124,7 @@ int RenderTest() {
 }
 
 void createSpriteOnCursor(double deltaTime) {
-	engine->gameObjects.push_back(std::make_unique<Cell>(Cell(cellrenderer.get(), engine->getWorldOrigin(), engine->getMousePosition())));
+	engine->gameObjects.push_back(std::make_unique<Cell>(Cell(cellrenderer, engine->getWorldOrigin(), engine->getMousePosition())));
 	//engine->gameObjects.push_back(std::make_unique<GameObject>(GameObject(ResourceManager::GetTexture("face"), engine->getWorldOrigin(), Transform(engine->getMousePosition(), Size(100.0f, 100.0f)))));
 }
 

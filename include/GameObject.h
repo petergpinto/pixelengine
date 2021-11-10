@@ -12,7 +12,7 @@
 //GameObject is a base class which others may inherit from
 class GameObject {
 public:
-	GameObject(Renderer* rend, Texture2D, std::shared_ptr<Transform> anchorPoint, Transform objectTransform = Transform());
+	GameObject(std::shared_ptr<Renderer> rend, Texture2D, std::shared_ptr<Transform> anchorPoint, Transform objectTransform = Transform());
 	virtual ~GameObject() = default;
 
 	virtual void tick(double) {};
@@ -37,7 +37,7 @@ protected:
 	Texture2D activeTexture; //Texture to draw on the GameObject, may be null for some
 	bool drawObject; //Do we draw the object?
 	bool markedForDeletion; //Is this object going to be deleted? (maybe deprecated)
-	Renderer* renderer;
+	std::shared_ptr<Renderer> renderer;
 private:
 	
 };
@@ -45,7 +45,7 @@ private:
 //An inherited member from GameObject that supports multiple textures in an animation set
 class AnimatedGameObject : public GameObject {
 public:
-	AnimatedGameObject(SpriteRenderer*, std::vector<Texture2D>, std::shared_ptr<Transform>);
+	AnimatedGameObject(std::shared_ptr<SpriteRenderer>, std::vector<Texture2D>, std::shared_ptr<Transform>);
 	void Render();
 private:
 	std::vector<Texture2D> animationTextureSet;
