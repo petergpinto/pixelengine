@@ -10,14 +10,12 @@ MouseHandler::MouseHandler() {
 	}
 }
 
-void MouseHandler::setPositionCallback(std::shared_ptr<GLFWwindow> window) {
-	callbackWindowCursor = window;
-	glfwSetCursorPosCallback(callbackWindowCursor.get(), MouseHandler::cursor_position_callback);
+void MouseHandler::setPositionCallback(GLFWwindow* window) {
+	glfwSetCursorPosCallback(window, MouseHandler::cursor_position_callback);
 }
 
-void MouseHandler::setMouseButtonCallback(std::shared_ptr<GLFWwindow> window) {
-	callbackWindowButton = window;
-	glfwSetMouseButtonCallback(callbackWindowButton.get(), MouseHandler::mouse_button_callback);
+void MouseHandler::setMouseButtonCallback(GLFWwindow* window) {
+	glfwSetMouseButtonCallback(window, MouseHandler::mouse_button_callback);
 }
 
 void MouseHandler::handleInput(double deltaTime) {

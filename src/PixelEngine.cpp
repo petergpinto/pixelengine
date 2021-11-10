@@ -15,7 +15,7 @@ PixelEngine::PixelEngine(bool vsync, int monitor) {
 	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount); 
 
 	//Create the window on the monitor indexed by "monitor"
-	currentWindow = std::shared_ptr<GLFWwindow>(PixelEngine::createBorderlessFullscreenWindow(monitors[monitor], vsync));
+	currentWindow = PixelEngine::createBorderlessFullscreenWindow(monitors[monitor], vsync);
 	//If the window creation failed, return an error
 	if (!currentWindow)
 		error = ERROR::GLFW_WINDOW_CREATE;
@@ -59,7 +59,7 @@ GLFWwindow* PixelEngine::createBorderlessFullscreenWindow(GLFWmonitor* monitor, 
 
 void PixelEngine::swapBufferOrFlush() {
 	if (vsyncEnabled)
-		glfwSwapBuffers(this->getWindow().get());
+		glfwSwapBuffers(this->getWindow());
 	else
 		glFlush();
 }
@@ -72,12 +72,12 @@ void PixelEngine::terminate() {
 	glfwTerminate();
 }
 
-int PixelEngine::shouldTerminate(std::shared_ptr<GLFWwindow> window) {
-	return glfwWindowShouldClose(window.get());
+int PixelEngine::shouldTerminate(GLFWwindow* window) {
+	return glfwWindowShouldClose(window);
 }
 
 void PixelEngine::setGLFWContext() {
-	glfwMakeContextCurrent(currentWindow.get());
+	glfwMakeContextCurrent(currentWindow);
 	gladLoadGL(glfwGetProcAddress); //Prevents memory access violation https://stackoverflow.com/questions/67400482/access-violation-executing-location-0x0000000000000000-opengl-with-glad-and-glf
 }
 //-------------END GLFW FUNCTIONS-----------------//
@@ -101,7 +101,7 @@ float PixelEngine::getWidth() {
 	return currentWindowWidth;
 }
 
-std::shared_ptr<GLFWwindow> PixelEngine::getWindow() {
+GLFWwindow* PixelEngine::getWindow() {
 	return currentWindow;
 }
 //----------------END WINDOW FUNCTIONS----------------//
