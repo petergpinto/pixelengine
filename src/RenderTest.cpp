@@ -157,7 +157,7 @@ int RenderTest() {
 				show_another_window = false;
 			ImGui::End();
 		}
-
+		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(500,500), ImVec2(100,100), IM_COL32(255, 0, 0, 200), 0, 10 + 4);
 		// Rendering
 		ImGui::Render();
 		int display_w, display_h;
