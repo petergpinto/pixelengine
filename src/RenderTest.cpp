@@ -157,7 +157,7 @@ int RenderTest() {
 				show_another_window = false;
 			ImGui::End();
 		}
-		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(500,500), ImVec2(100,100), IM_COL32(255, 0, 0, 200), 0, 10 + 4);
+		engine->renderObjects();
 		// Rendering
 		ImGui::Render();
 		int display_w, display_h;
@@ -173,7 +173,7 @@ int RenderTest() {
 		engine->handleKeyboardAndMouseInput(deltaTime);
 		
 		//Call Render() on each GameObject, except if it is marked for deletion
-		engine->renderObjects();
+		
 		engine->tickObjects(deltaTime);
 		//Delete objects marked for deletion
 		engine->deleteMarkedObjects();
