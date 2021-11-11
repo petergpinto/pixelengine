@@ -26,6 +26,15 @@ target_sources(PixelEngine PRIVATE "texture/CellRenderer.cpp")
 target_sources(PixelEngine PRIVATE "Cell.cpp")
 target_sources(PixelEngine PRIVATE "input/Action.cpp")
 
+target_sources(PixelEngine PRIVATE "imgui/imgui.cpp")
+target_sources(PixelEngine PRIVATE "imgui/imgui_demo.cpp")
+target_sources(PixelEngine PRIVATE "imgui/imgui_draw.cpp")
+target_sources(PixelEngine PRIVATE "imgui/imgui_tables.cpp")
+target_sources(PixelEngine PRIVATE "imgui/imgui_widgets.cpp")
+
+target_sources(PixelEngine PRIVATE "imgui/backends/imgui_impl_glfw.cpp")
+target_sources(PixelEngine PRIVATE "imgui/backends/imgui_impl_opengl3.cpp")
+
 #Debug
 target_sources(PixelEngine PRIVATE "RenderTest.cpp")
 
