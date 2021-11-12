@@ -157,15 +157,19 @@ int RenderTest() {
 				show_another_window = false;
 			ImGui::End();
 		}
-		engine->renderObjects();
-		// Rendering
-		ImGui::Render();
+
 		int display_w, display_h;
 		glfwGetFramebufferSize(engine->getWindow(), &display_w, &display_h);
 
 		/* Render here */
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glViewport(0, 0, display_w, display_h);
+		glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		engine->renderObjects();
+		// Rendering
+		ImGui::Render();
+
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//std::cout << deltaTime << std::endl;
