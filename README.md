@@ -13,3 +13,6 @@
 # pixelengine
 
 This project is a cross-platform OpenGL rendering engine.  
+
+
+## This project was never finished, but I'm making the repo public anyway as a sample of the code I write
